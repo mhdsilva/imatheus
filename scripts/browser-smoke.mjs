@@ -1,0 +1,206 @@
+import { chromium } from "@playwright/test";
+import assert from "node:assert/strict";
+
+const browser = await chromium.launch({
+  channel: "chrome",
+  headless: true,
+  args: ["--no-sandbox", "--disable-gpu", "--disable-software-rasterizer"],
+});
+const page = await browser.newPage({
+  viewport: { width: 1440, height: 900 },
+  deviceScaleFactor: 1,
+});
+const errors = [];
+page.setDefaultTimeout(20000);
+page.on("pageerror", (error) => errors.push(error.message));
+async function snapshot(path) {
+  await page.evaluate(() => window.__farm?.game.loop.sleep());
+  try {
+    await page.screenshot({
+      path,
+      fullPage: true,
+      animations: "disabled",
+      timeout: 20000,
+    });
+  } finally {
+    await page.evaluate(() => window.__farm?.game.loop.wake());
+  }
+}
+try {
+  await page.goto(process.argv[2] ?? "http://localhost:5173", {
+    waitUntil: "networkidle",
+  });
+  await page.locator("#enter-game:enabled").waitFor();
+  await snapshot("/tmp/vale-loading.png");
+  await page.locator("#enter-game").click();
+  await page.waitForFunction(
+    () => document.getElementById("loading").style.display === "none",
+  );
+  await snapshot("/tmp/vale-desktop.png");
+  console.log("Fullscreen scene and loading screen verified.");
+  await page.locator("#welcome-close").click();
+  const initial = await page.evaluate(() => ({
+    x: window.__farm.scene.player.x,
+    y: window.__farm.scene.player.y,
+  }));
+  async function clickWorld(x, y) {
+    const position = await page.evaluate(
+      ({ x, y }) => {
+        const s = window.__farm.scene,
+          c = s.cameras.main;
+        const p = c.matrix.transformPoint(x - c.scrollX, y - c.scrollY);
+        const r = s.game.canvas.getBoundingClientRect();
+        return { x: r.left + p.x, y: r.top + p.y };
+      },
+      { x, y },
+    );
+    await page.mouse.click(position.x, position.y);
+  }
+  await clickWorld(480, 380);
+  await page.waitForFunction(
+    ({ x }) => Math.abs(window.__farm.scene.player.x - x) > 10,
+    initial,
+  );
+  await clickWorld(419, 249);
+  await page.waitForFunction(
+    () => window.__farm.state.harvested > 0,
+    {},
+    { timeout: 25000 },
+  );
+  assert.equal(
+    await page.evaluate(() => window.__farm.state.produce.carrot),
+    1,
+  );
+  await page.locator('[data-tool="carrot"]').click();
+  await clickWorld(419, 249);
+  await page.waitForFunction(() => window.__farm.state.planted > 0);
+  await clickWorld(419, 249);
+  await page.waitForFunction(() => window.__farm.state.plots[0].watered);
+  console.log("Click navigation, harvest, planting and watering verified.");
+  await page.locator(".portfolio-button").click();
+  await page.locator('#modal-content [data-page="about"]').click();
+  await page.getByRole("heading", { name: "Prazer, Matheus." }).waitFor();
+  await page
+    .getByText("Tech Lead @ Humanizadas · Arquitetura de Soluções & Inovação", {
+      exact: true,
+    })
+    .waitFor();
+  await page.getByText("Sistemas de Informação", { exact: false }).waitFor();
+  await page.locator('#modal-content [data-page="career"]').click();
+  assert.equal(await page.locator(".career-timeline article").count(), 5);
+  await page
+    .getByRole("heading", { name: "The Brooklyn Brothers", exact: true })
+    .waitFor();
+  await page.locator('#modal-content [data-page="skills"]').click();
+  await page.getByText("Oracle Cloud", { exact: true }).waitFor();
+  await page.locator('#modal-content [data-page="projects"]').click();
+  assert.equal(
+    await page
+      .locator('a[href="https://github.com/mhdsilva/meta-portifolio"]')
+      .count(),
+    1,
+  );
+  await page.keyboard.press("Escape");
+  await page.locator(".portfolio-button").click();
+  await page.locator('#modal-content [data-page="contact"]').click();
+  assert.equal(
+    await page
+      .locator('a[href="mailto:matheushenrique2773@gmail.com"]')
+      .count(),
+    1,
+  );
+  assert.equal(
+    await page
+      .locator('a[href="https://linkedin.com/in/matheushenrique2773"]')
+      .count(),
+    1,
+  );
+  assert.equal(await page.locator('a[href="tel:+5534998147021"]').count(), 1);
+  await snapshot("/tmp/vale-contact.png");
+  await page.keyboard.press("Escape");
+  await page.locator("#bag-button").click();
+  await page.getByRole("heading", { name: "Sua mochila" }).waitFor();
+  await page.keyboard.press("Escape");
+  await clickWorld(220, 386);
+  await page
+    .getByRole("heading", { name: "Mercado da Rosa" })
+    .waitFor({ timeout: 20000 });
+  await page.locator("#sell").click();
+  assert.equal(await page.evaluate(() => window.__farm.state.sold), 1);
+  const seedsBefore = await page.evaluate(() => window.__farm.state.seeds.corn);
+  await page.locator('[data-buy="corn"]').click();
+  assert.equal(
+    await page.evaluate(() => window.__farm.state.seeds.corn),
+    seedsBefore + 1,
+  );
+  await page.keyboard.press("Escape");
+  const npcBefore = await page.evaluate(() =>
+    window.__farm.scene.actors.map((a) => ({ x: a.sprite.x, y: a.sprite.y })),
+  );
+  await page.waitForTimeout(7000);
+  const npcAfter = await page.evaluate(() =>
+    window.__farm.scene.actors.map((a) => ({ x: a.sprite.x, y: a.sprite.y })),
+  );
+  assert.ok(
+    npcBefore.some(
+      (p, i) => Math.hypot(p.x - npcAfter[i].x, p.y - npcAfter[i].y) > 5,
+    ),
+  );
+  console.log("Shop, portfolio and autonomous routines verified.");
+  const before = await page.evaluate(() => window.__farm.state);
+  await page.reload({ waitUntil: "networkidle" });
+  await page.locator("#enter-game:enabled").waitFor();
+  await page.locator("#enter-game").click();
+  await page.waitForFunction(
+    () => document.getElementById("loading").style.display === "none",
+  );
+  assert.deepEqual(await page.evaluate(() => window.__farm.state), before);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.waitForTimeout(800);
+  assert.equal(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+    true,
+  );
+  assert.equal(
+    await page.evaluate(
+      () =>
+        document.querySelector(".game-stage").getBoundingClientRect().height ===
+        innerHeight,
+    ),
+    true,
+  );
+  await snapshot("/tmp/vale-mobile.png");
+  assert.deepEqual(errors, []);
+  console.log(
+    "Browser smoke passed: rendering, click movement, harvest, planting, watering, actual shop purchases and sales, autonomous NPCs, portfolio, inventory, persistence and mobile layout.",
+  );
+} catch (error) {
+  await snapshot("/tmp/vale-failure.png").catch(() => {});
+  console.error(
+    await page.evaluate(() => {
+      const s = window.__farm?.scene;
+      return s
+        ? {
+            player: { x: s.player.x, y: s.player.y },
+            path: s.playerPath,
+            pending: s.pending?.id,
+            harvested: window.__farm.state.harvested,
+            toast: document.getElementById("toast").textContent,
+            modal: document.getElementById("modal").open,
+            fps: s.game.loop.actualFps,
+            actors: s.actors.map((a) => ({
+              name: a.name,
+              x: a.sprite.x,
+              y: a.sprite.y,
+              path: a.path.length,
+            })),
+          }
+        : {};
+    }),
+  );
+  throw error;
+} finally {
+  await browser.close();
+}

@@ -1,0 +1,218 @@
+{
+  "grass0": {
+    "width": 16,
+    "height": 16
+  },
+  "grass1": {
+    "width": 16,
+    "height": 16
+  },
+  "grass2": {
+    "width": 16,
+    "height": 16
+  },
+  "grass3": {
+    "width": 16,
+    "height": 16
+  },
+  "path": {
+    "width": 16,
+    "height": 16
+  },
+  "soil": {
+    "width": 16,
+    "height": 16
+  },
+  "wet-soil": {
+    "width": 16,
+    "height": 16
+  },
+  "water": {
+    "width": 16,
+    "height": 16
+  },
+  "tree": {
+    "width": 48,
+    "height": 64
+  },
+  "bush": {
+    "width": 28,
+    "height": 22
+  },
+  "rock": {
+    "width": 20,
+    "height": 16
+  },
+  "fence": {
+    "width": 32,
+    "height": 20
+  },
+  "house": {
+    "width": 112,
+    "height": 104
+  },
+  "barn": {
+    "width": 112,
+    "height": 104
+  },
+  "market": {
+    "width": 112,
+    "height": 104
+  },
+  "coop": {
+    "width": 76,
+    "height": 67
+  },
+  "tractor": {
+    "width": 62,
+    "height": 46
+  },
+  "mailbox": {
+    "width": 28,
+    "height": 36
+  },
+  "board": {
+    "width": 36,
+    "height": 38
+  },
+  "player": {
+    "width": 128,
+    "height": 192,
+    "frameWidth": 32,
+    "frameHeight": 48,
+    "directions": [
+      "down",
+      "left",
+      "right",
+      "up"
+    ],
+    "framesPerDirection": 4
+  },
+  "farmer": {
+    "width": 128,
+    "height": 192,
+    "frameWidth": 32,
+    "frameHeight": 48,
+    "directions": [
+      "down",
+      "left",
+      "right",
+      "up"
+    ],
+    "framesPerDirection": 4
+  },
+  "mechanic": {
+    "width": 128,
+    "height": 192,
+    "frameWidth": 32,
+    "frameHeight": 48,
+    "directions": [
+      "down",
+      "left",
+      "right",
+      "up"
+    ],
+    "framesPerDirection": 4
+  },
+  "merchant": {
+    "width": 128,
+    "height": 192,
+    "frameWidth": 32,
+    "frameHeight": 48,
+    "directions": [
+      "down",
+      "left",
+      "right",
+      "up"
+    ],
+    "framesPerDirection": 4
+  },
+  "farmer-portrait": {
+    "width": 32,
+    "height": 40
+  },
+  "chicken": {
+    "width": 20,
+    "height": 20
+  },
+  "cow": {
+    "width": 36,
+    "height": 28
+  },
+  "carrot-0": {
+    "width": 16,
+    "height": 24
+  },
+  "carrot-1": {
+    "width": 16,
+    "height": 24
+  },
+  "carrot-2": {
+    "width": 16,
+    "height": 24
+  },
+  "turnip-0": {
+    "width": 16,
+    "height": 24
+  },
+  "turnip-1": {
+    "width": 16,
+    "height": 24
+  },
+  "turnip-2": {
+    "width": 16,
+    "height": 24
+  },
+  "corn-0": {
+    "width": 16,
+    "height": 24
+  },
+  "corn-1": {
+    "width": 16,
+    "height": 24
+  },
+  "corn-2": {
+    "width": 16,
+    "height": 24
+  },
+  "carrot": {
+    "width": 24,
+    "height": 24
+  },
+  "turnip": {
+    "width": 24,
+    "height": 24
+  },
+  "corn": {
+    "width": 24,
+    "height": 24
+  },
+  "basket": {
+    "width": 24,
+    "height": 24
+  },
+  "can": {
+    "width": 24,
+    "height": 24
+  },
+  "bag": {
+    "width": 24,
+    "height": 24
+  },
+  "sunflower": {
+    "width": 24,
+    "height": 30
+  },
+  "flower": {
+    "width": 16,
+    "height": 16
+  },
+  "hay": {
+    "width": 24,
+    "height": 22
+  },
+  "shadow": {
+    "width": 24,
+    "height": 12
+  }
+}

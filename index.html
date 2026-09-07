@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#183c35" />
+    <meta
+      name="description"
+      content="Portfólio de Matheus Henrique da Silva: Tech Lead na Humanizadas, cofundador da Kairoo Tech e engenheiro de software. Explore sua trajetória em uma fazenda interativa."
+    />
+    <title>Matheus Henrique da Silva · Vale do Matheus</title>
+    <link rel="icon" href="/assets/sunflower.png" type="image/png" />
+  </head>
+  <body>
+    <div id="app">
+      <main>
+        <section class="game-shell" aria-label="Jogo de fazenda interativo">
+          <div class="game-stage" id="game-stage">
+            <div
+              id="game"
+              aria-label="Clique no chão para andar. Clique em personagens, plantações e construções para interagir."
+            ></div>
+            <div
+              class="loading"
+              id="loading"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="loading-title"
+            >
+              <div class="loading-content">
+                <div class="loading-eyebrow">
+                  UM PEQUENO MUNDO PARA DESCOBRIR
+                </div>
+                <img
+                  class="loading-flower"
+                  src="/assets/sunflower.png"
+                  alt=""
+                />
+                <h1 id="loading-title">vale do<br /><em>matheus</em></h1>
+                <p class="loading-subtitle">Entre, a porteira está aberta.</p>
+                <div class="loading-rule"></div>
+                <div class="loading-tips">
+                  <div>
+                    <span>01</span>
+                    <p>
+                      <strong>Escolha seu caminho</strong>Clique no chão para
+                      passear pela fazenda.
+                    </p>
+                  </div>
+                  <div>
+                    <span>02</span>
+                    <p>
+                      <strong>Conheça quem mora aqui</strong>Clique nos
+                      personagens e lugares para conversar e descobrir meu
+                      trabalho.
+                    </p>
+                  </div>
+                  <div>
+                    <span>03</span>
+                    <p>
+                      <strong>Cultive alguma coisa boa</strong>Colha, venda,
+                      plante. O vale cresce com você.
+                    </p>
+                  </div>
+                </div>
+                <div class="load-track"><span id="load-progress"></span></div>
+                <p id="load-status">
+                  Preparando a terra e acordando as galinhas…
+                </p>
+                <button id="enter-game" disabled>Preparando a fazenda…</button
+                ><small class="loading-note"
+                  >FEITO PARA EXPLORAR SEM PRESSA · PROGRESSO SALVO NESTE
+                  NAVEGADOR</small
+                >
+              </div>
+            </div>
+            <div class="world-header">
+              <div class="world-name">
+                <img src="/assets/sunflower.png" alt="" /><span
+                  >vale do matheus<small
+                    >☀ PRIMAVERA · DIA <b id="day">1</b></small
+                  ></span
+                >
+              </div>
+              <nav class="world-nav" aria-label="Menu do jogo">
+                <button
+                  id="help-button"
+                  aria-label="Como jogar"
+                  title="Como jogar"
+                >
+                  ?</button
+                ><button data-page="directory" class="portfolio-button">
+                  ☰ <span>Portfólio</span>
+                </button>
+              </nav>
+            </div>
+            <div class="hud-left">
+              <div class="money">
+                <span class="coin">●</span><strong id="money">35</strong
+                ><span>moedas</span>
+              </div>
+              <button
+                id="sound"
+                class="sound-button"
+                title="Ativar sons"
+                aria-label="Ativar sons"
+                aria-pressed="false"
+              >
+                ♫ <span>som desligado</span>
+              </button>
+            </div>
+            <aside class="quest">
+              <div class="quest-heading">
+                <span>✧</span> SEU PRIMEIRO DIA
+                <button
+                  id="quest-toggle"
+                  aria-label="Recolher objetivos"
+                  aria-expanded="true"
+                >
+                  −
+                </button>
+              </div>
+              <div id="quest-body">
+                <h2>Da terra, boas histórias.</h2>
+                <p>Uma pequena colheita.<br />O começo de algo maior.</p>
+                <ul id="quest-list"></ul>
+                <div class="quest-progress">
+                  <span id="quest-progress"></span>
+                </div>
+              </div>
+            </aside>
+            <div class="scene-label">
+              <span>⌖</span>
+              <div id="area-name">
+                O coração da fazenda<small>CLIQUE PARA EXPLORAR</small>
+              </div>
+            </div>
+            <aside class="minimap" aria-label="Mapa da fazenda">
+              <div><span>O VALE</span><span>⌖</span></div>
+              <canvas
+                id="minimap"
+                width="144"
+                height="96"
+                aria-label="Sua posição no mapa"
+              ></canvas
+              ><small id="save-status">Progresso salvo</small>
+            </aside>
+            <div class="toolbar" aria-label="Ferramentas">
+              <button
+                class="tool selected"
+                data-tool="hand"
+                title="Interagir / colher"
+                aria-label="Interagir e colher"
+                aria-pressed="true"
+              >
+                <img src="/assets/basket.png" alt="" /><span
+                  >Colher</span
+                ></button
+              ><button
+                class="tool"
+                data-tool="water"
+                title="Regar"
+                aria-label="Regar plantações"
+                aria-pressed="false"
+              >
+                <img src="/assets/can.png" alt="" /><span>Regar</span></button
+              ><span class="tool-separator"></span
+              ><button
+                class="tool"
+                data-tool="carrot"
+                title="Plantar cenoura"
+                aria-label="Plantar cenoura"
+                aria-pressed="false"
+              >
+                <img src="/assets/carrot.png" alt="" /><b id="seed-carrot">0</b
+                ><span>Cenoura</span></button
+              ><button
+                class="tool"
+                data-tool="turnip"
+                title="Plantar nabo"
+                aria-label="Plantar nabo"
+                aria-pressed="false"
+              >
+                <img src="/assets/turnip.png" alt="" /><b id="seed-turnip">0</b
+                ><span>Nabo</span></button
+              ><button
+                class="tool"
+                data-tool="corn"
+                title="Plantar milho"
+                aria-label="Plantar milho"
+                aria-pressed="false"
+              >
+                <img src="/assets/corn.png" alt="" /><b id="seed-corn">0</b
+                ><span>Milho</span></button
+              ><span class="tool-separator"></span
+              ><button
+                class="tool"
+                id="bag-button"
+                title="Abrir mochila"
+                aria-label="Abrir mochila"
+              >
+                <img src="/assets/bag.png" alt="" /><span>Mochila</span>
+              </button>
+            </div>
+            <div
+              class="toast"
+              id="toast"
+              role="status"
+              aria-live="polite"
+            ></div>
+            <div class="welcome" id="welcome">
+              <div class="welcome-portrait">
+                <img src="/assets/farmer-portrait.png" alt="Fazendeira Lia" />
+              </div>
+              <div>
+                <span>LIA · SUA VIZINHA</span>
+                <p>
+                  Oi, que bom que você veio!
+                  <strong>Clique no chão para passear.</strong> As cenouras ali
+                  já estão prontas para colher.
+                </p>
+              </div>
+              <button id="welcome-close" aria-label="Fechar boas-vindas">
+                Entendi <span>→</span>
+              </button>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+    <dialog id="modal" aria-labelledby="modal-title">
+      <div class="modal-top">
+        <span id="modal-kicker">PELO VALE</span
+        ><button id="modal-close" aria-label="Fechar janela">✕</button>
+      </div>
+      <div id="modal-content"></div>
+    </dialog>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

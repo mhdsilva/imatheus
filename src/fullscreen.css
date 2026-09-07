@@ -1,0 +1,563 @@
+/* The world is the entire application. All interface elements belong to the HUD. */
+html,
+body,
+#app,
+main,
+.game-shell,
+.game-stage {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+html {
+  height: 100dvh;
+  background: #8db668;
+}
+body {
+  overscroll-behavior: none;
+}
+.game-shell {
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+.game-stage {
+  height: 100dvh;
+  position: fixed;
+  inset: 0;
+}
+.world-header {
+  position: absolute;
+  top: 22px;
+  left: 25px;
+  right: 25px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  pointer-events: none;
+  z-index: 4;
+}
+.world-name {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  background: #fff7dfed;
+  border: 1px solid #a9a579;
+  border-radius: 8px;
+  padding: 10px 16px 10px 10px;
+  box-shadow: 0 3px 0 #39563b20;
+}
+.world-name img {
+  width: 27px;
+  height: 35px;
+  object-fit: contain;
+}
+.world-name > span {
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 19px;
+  letter-spacing: -0.5px;
+  color: #40583b;
+}
+.world-name small {
+  font-family: "DM Sans", sans-serif;
+  display: block;
+  font-size: 7px;
+  letter-spacing: 1.1px;
+  margin-top: 5px;
+  color: #998252;
+}
+.world-nav {
+  display: flex;
+  gap: 8px;
+  pointer-events: auto;
+}
+.world-nav button {
+  height: 38px;
+  min-width: 38px;
+  background: #fff7dfed;
+  border: 1px solid #aba77e;
+  box-shadow: 0 3px 0 #39563b20;
+  border-radius: 7px;
+  font-size: 15px;
+}
+.world-nav .portfolio-button {
+  padding: 0 15px;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.portfolio-button span {
+  font-size: 10px;
+  font-weight: 600;
+}
+.hud-left {
+  top: 99px;
+  left: 25px;
+  gap: 8px;
+}
+.money {
+  padding: 7px 12px;
+  border-width: 1px;
+}
+.money strong {
+  font-size: 17px;
+}
+.sound-button {
+  font-size: 11px;
+}
+.quest {
+  top: 77px;
+  right: 25px;
+  width: 194px;
+  background: #fff9e9e8;
+  padding: 12px 14px;
+}
+.quest h2 {
+  font-size: 16px;
+}
+.quest p {
+  font-size: 10px;
+}
+.quest li {
+  font-size: 9px;
+}
+.toolbar {
+  bottom: 25px;
+  gap: 6px;
+  padding: 7px;
+  border-width: 1px;
+  border-radius: 9px;
+  background: #fff7dfea;
+  box-shadow: 0 4px 0 #3b563b30;
+}
+.tool {
+  width: 46px;
+  height: 49px;
+}
+.tool img {
+  width: 26px;
+  height: 26px;
+}
+.tool span {
+  font-size: 7px;
+}
+.tool b {
+  font-size: 9px;
+}
+.scene-label {
+  display: flex;
+  bottom: 28px;
+  left: 25px;
+  font-size: 11px;
+  color: #fff8e4;
+  text-shadow:
+    0 1px 3px #28472c,
+    0 0 8px #28472c;
+}
+.scene-label small {
+  font-size: 7px;
+}
+.welcome {
+  bottom: 110px;
+  width: 460px;
+  padding: 13px 16px;
+  background: #fff8e6ed;
+}
+.welcome p {
+  font-size: 10px;
+}
+.welcome-portrait {
+  width: 40px;
+  height: 49px;
+}
+.toast {
+  top: 24px;
+  font-size: 11px;
+  max-width: 430px;
+}
+.minimap {
+  position: absolute;
+  right: 25px;
+  bottom: 25px;
+  padding: 8px;
+  background: #fff5dcdf;
+  border: 1px solid #b7ab7a;
+  border-radius: 7px;
+  width: 162px;
+  box-shadow: 0 3px 0 #3b563b20;
+  pointer-events: none;
+}
+.minimap > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #8e845a;
+  font-size: 7px;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+.minimap canvas {
+  display: block;
+  width: 144px;
+  height: 96px;
+  border: 1px solid #c1c697;
+  image-rendering: pixelated;
+}
+.minimap small {
+  display: block;
+  font-size: 6px;
+  margin-top: 7px;
+  color: #8b8d70;
+  line-height: 1.5;
+  text-align: center;
+}
+.minimap small .live-dot {
+  width: 4px;
+  height: 4px;
+}
+.loading {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: radial-gradient(
+    ellipse at 50% 35%,
+    #fffbedf7 0%,
+    #f1f1dbf2 60%,
+    #dce5cbea 100%
+  );
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-y: auto;
+  padding: 34px 20px;
+  transition: opacity 0.45s;
+  cursor: default;
+}
+.loading-content {
+  max-width: 360px;
+  width: 100%;
+  text-align: center;
+  position: relative;
+}
+.loading-eyebrow {
+  font-size: 8px;
+  font-weight: 650;
+  letter-spacing: 2.4px;
+  color: #8b997b;
+  margin-bottom: 24px;
+}
+.loading .loading-flower {
+  width: 34px;
+  height: 43px;
+  object-fit: contain;
+  margin-bottom: 10px;
+  animation: bob 2s ease-in-out infinite alternate;
+}
+.loading h1 {
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 62px;
+  line-height: 0.99;
+  font-weight: 450;
+  color: #35533b;
+  letter-spacing: -3px;
+  margin: 0;
+}
+.loading h1 em {
+  font-style: normal;
+  color: #5e7950;
+}
+.loading-subtitle {
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 16px;
+  color: #949b7a;
+  margin: 20px 0 0;
+}
+.loading-rule {
+  width: 35px;
+  height: 1px;
+  background: #c8cdb2;
+  margin: 25px auto;
+}
+.loading-tips {
+  text-align: left;
+  padding: 0 13px;
+}
+.loading-tips > div {
+  display: flex;
+  gap: 15px;
+  margin: 18px 0;
+}
+.loading-tips > div > span {
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 17px;
+  color: #b7ad79;
+  padding-top: 1px;
+}
+.loading-tips p {
+  font-size: 11px;
+  line-height: 1.7;
+  color: #93957b;
+  margin: 0;
+}
+.loading-tips strong {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #5e7354;
+  margin-bottom: 2px;
+}
+.load-track {
+  height: 3px;
+  background: #dfe3ca;
+  margin: 27px 13px 8px;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.load-track > span {
+  display: block;
+  width: 0;
+  height: 100%;
+  background: #829969;
+  transition: width 0.25s;
+}
+#load-status {
+  font-size: 9px;
+  color: #96997c;
+  margin: 0 0 19px;
+}
+#enter-game {
+  background: #506e46;
+  color: #fff7dc;
+  border: 1px solid #405d39;
+  border-radius: 7px;
+  padding: 14px 27px;
+  font-size: 12px;
+  letter-spacing: 0.3px;
+  width: calc(100% - 26px);
+  box-shadow: 0 3px 0 #314d3020;
+  transition:
+    background 0.2s,
+    transform 0.2s;
+}
+#enter-game:hover {
+  background: #405f38;
+  transform: translateY(-1px);
+}
+#enter-game:disabled {
+  opacity: 0.45;
+  transform: none;
+}
+.loading-note {
+  display: block;
+  margin-top: 22px;
+  font-size: 6px;
+  letter-spacing: 0.9px;
+  color: #a1a68b;
+  line-height: 1.8;
+}
+.loading.leaving {
+  opacity: 0;
+  pointer-events: none;
+}
+@media (min-width: 1500px) {
+  .game-stage {
+    height: 100dvh;
+  }
+}
+@media (max-width: 900px) {
+  .scene-label {
+    display: none;
+  }
+  .minimap {
+    width: 122px;
+    right: 16px;
+    bottom: 20px;
+  }
+  .minimap canvas {
+    width: 104px;
+    height: 69px;
+  }
+  .minimap small {
+    font-size: 5px;
+  }
+  .toolbar {
+    gap: 3px;
+  }
+  .tool {
+    width: 42px;
+  }
+}
+@media (max-width: 700px) {
+  #app {
+    padding: 0;
+  }
+  .game-stage {
+    height: 100dvh;
+    min-height: 0;
+  }
+  .world-header {
+    top: 13px;
+    left: 12px;
+    right: 12px;
+  }
+  .world-name {
+    padding: 8px 12px 8px 8px;
+    gap: 6px;
+  }
+  .world-name > span {
+    font-size: 17px;
+  }
+  .world-name img {
+    width: 23px;
+    height: 30px;
+  }
+  .world-name small {
+    font-size: 6px;
+    letter-spacing: 0.6px;
+  }
+  .world-nav {
+    gap: 5px;
+  }
+  .world-nav button {
+    height: 34px;
+    min-width: 34px;
+  }
+  .world-nav .portfolio-button {
+    padding: 0 10px;
+  }
+  .portfolio-button span {
+    font-size: 9px;
+  }
+  .hud-left {
+    top: 85px;
+    left: 12px;
+  }
+  .money {
+    padding: 6px 9px;
+  }
+  .money strong {
+    font-size: 15px;
+  }
+  .money > span:last-child {
+    font-size: 8px;
+  }
+  .sound-button span {
+    font-size: 8px;
+  }
+  .quest {
+    top: 64px;
+    right: 12px;
+    width: 161px;
+    padding: 8px 10px;
+  }
+  .quest h2 {
+    font-size: 14px;
+  }
+  .quest p {
+    font-size: 9px;
+  }
+  .quest li {
+    font-size: 8px;
+  }
+  .quest-heading {
+    font-size: 6px;
+  }
+  .quest-heading > span {
+    font-size: 14px;
+  }
+  .toolbar {
+    bottom: max(17px, env(safe-area-inset-bottom));
+    padding: 5px;
+    gap: 2px;
+  }
+  .tool {
+    width: 40px;
+    height: 48px;
+  }
+  .tool-separator {
+    margin: 0 1px;
+  }
+  .minimap {
+    display: none;
+  }
+  .welcome {
+    bottom: 91px;
+    width: calc(100% - 24px);
+    padding: 10px;
+    gap: 8px;
+  }
+  .welcome p {
+    font-size: 9px;
+  }
+  .welcome-portrait {
+    width: 34px;
+    height: 43px;
+  }
+  .toast {
+    top: auto;
+    bottom: 185px;
+    max-width: calc(100% - 24px);
+    font-size: 10px;
+  }
+  .loading {
+    padding: 25px 22px;
+  }
+  .loading-content {
+    max-width: 330px;
+  }
+  .loading h1 {
+    font-size: 56px;
+  }
+  .loading-eyebrow {
+    font-size: 7px;
+    letter-spacing: 1.7px;
+    margin-bottom: 16px;
+  }
+  .loading-rule {
+    margin: 22px auto;
+  }
+  .loading-tips > div {
+    margin: 14px 0;
+  }
+  .loading-note {
+    font-size: 5px;
+  }
+}
+@media (max-height: 700px) {
+  .loading {
+    align-items: flex-start;
+  }
+  .loading-content {
+    margin: auto;
+  }
+  .loading .loading-flower {
+    display: none;
+  }
+  .loading h1 {
+    font-size: 46px;
+  }
+  .loading-subtitle {
+    margin-top: 12px;
+  }
+  .loading-rule {
+    margin: 15px auto;
+  }
+  .loading-tips > div {
+    margin: 11px 0;
+  }
+  .loading-eyebrow {
+    margin-bottom: 14px;
+  }
+  .load-track {
+    margin-top: 18px;
+  }
+  .loading-note {
+    margin-top: 14px;
+  }
+}
