@@ -152,6 +152,17 @@ try {
       .count(),
     1,
   );
+  await page.locator('#modal-content [data-page="case-farm"]').click();
+  await page
+    .getByRole("heading", { name: "A fazenda como portfólio." })
+    .waitFor();
+  await page.getByText("Decisões de construção", { exact: true }).waitFor();
+  await page.locator('#modal-content [data-page="projects"]').click();
+  await page.locator('#modal-content [data-page="case-meta"]').click();
+  await page
+    .getByRole("heading", { name: "Um portfólio que se constrói." })
+    .waitFor();
+  await page.getByText("Seis atos, uma narrativa", { exact: true }).waitFor();
   await page.keyboard.press("Escape");
   await page.locator(".portfolio-button").click();
   await page.locator('#modal-content [data-page="contact"]').click();

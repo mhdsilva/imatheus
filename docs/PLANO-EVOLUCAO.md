@@ -95,6 +95,8 @@ Prioridade: após o passeio; levantamento de conteúdo pode acontecer antes.
 - Compartilhar os dados entre jogo e currículo, com resumo no currículo e aprofundamento nos painéis de projetos.
 - Reservar futuros cases profissionais para informações que Matheus confirmar como públicas.
 
+Status em 8 de setembro de 2026: os dois cases dos projetos públicos foram adicionados aos painéis do jogo, com contexto, decisões técnicas e evidências dos repositórios. Capturas reais e cases de experiências profissionais continuam dependentes de uma curadoria posterior.
+
 ### Conteúdo que depende do Matheus
 
 Para cada case de empresa: o que pode ser divulgado, qual foi sua responsabilidade, que decisões tomou e quais resultados podem ser demonstrados. Sem números confirmados, descrever resultados qualitativos verificáveis. Não acessar sistemas de trabalho ou publicar material de clientes para preencher essas lacunas.

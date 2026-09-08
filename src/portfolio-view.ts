@@ -56,11 +56,19 @@ export function renderPortfolio(page: string): string | null {
       p.projects
         .map(
           (project) =>
-            `<article class="content-card"><span class="experience-period">${escape(project.category)}</span><h3>${escape(project.name)}</h3><p>${escape(project.description)}</p>${tags(project.technologies)}<div class="modal-actions">${external(project.url, "Ver repositório")}</div></article>`,
+            `<article class="content-card"><span class="experience-period">${escape(project.category)}</span><h3>${escape(project.name)}</h3><p>${escape(project.description)}</p>${tags(project.technologies)}<div class="modal-actions"><button class="primary-button" data-page="case-${project.id}">Ler case →</button>${external(project.url, "Ver repositório")}</div></article>`,
         )
         .join("") +
       `<div class="modal-actions"><button class="primary-button" data-page="skills">Minhas tecnologias →</button>${external(p.contact.github, "Mais no GitHub")}</div>`
     );
+  if (page.startsWith("case-")) {
+    const project = p.projects.find((item) => `case-${item.id}` === page);
+    if (!project) return null;
+    return (
+      hero(project.id === "farm" ? "house" : "tractor", project.caseStudy.title, project.category) +
+      `<p>${escape(project.caseStudy.context)}</p><section class="case-section"><h3>Decisões de construção</h3>${project.caseStudy.decisions.map((decision) => `<article class="content-card"><h4>${escape(decision.title)}</h4><p>${escape(decision.text)}</p></article>`).join("")}</section><section class="case-evidence"><h3>Evidências públicas</h3><p>${escape(project.caseStudy.evidence)}</p></section><div class="modal-actions">${external(project.url, "Abrir repositório", "primary-button")}<button class="secondary-button" data-page="projects">Voltar aos projetos</button></div>`
+    );
+  }
   if (page === "contact")
     return (
       hero(

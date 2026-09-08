@@ -78,6 +78,8 @@ Os dados profissionais foram trazidos das seções exibidas no [meta-portifolio]
 
 Para atualizar o perfil nas duas versões, edite `src/portfolio.ts` e refaça o build. Os projetos apresentados são o portfólio em uma fazenda e o Meta-Developer Portfolio, ambos com links para seus repositórios. A opção de salvar PDF imprime os dados publicados; não há um arquivo de currículo externo inventado ou copiado de outra fonte.
 
+No jogo, cada projeto agora também abre um case com contexto, decisões técnicas e evidências públicas. Os cases iniciais se baseiam exclusivamente nos README e repositórios abertos de `imatheus` e `meta-portifolio`; não incluem métricas, clientes ou resultados de trabalhos privados.
+
 `node scripts/resume-smoke.mjs http://localhost:5173` verifica acesso direto, HTML sem JavaScript, ausência do download do jogo, impressão, celular e o atalho da abertura. O build é multipágina e inclui `dist/curriculo/index.html`. A chave antiga `vale-do-matheus:v1` foi mantida para preservar o progresso após a troca do título visível.
 
 Este repositório publica o código do portfólio. Hospedagem e deploy automático não estão ativados.

@@ -70,20 +70,64 @@ export const portfolio = {
   },
   projects: [
     {
+      id: "farm",
       name: "Portfólio em uma fazenda",
       category: "Portfólio jogável",
       description:
         "Uma fazenda em pixel art com navegação por clique, moradores com rotinas próprias, cultivo e comércio. Os sprites são desenhados e exportados por código.",
       technologies: ["TypeScript", "Phaser", "Vite", "Node.js"],
       url: "https://github.com/mhdsilva/imatheus",
+      caseStudy: {
+        title: "A fazenda como portfólio.",
+        context:
+          "A proposta foi transformar a apresentação profissional em uma experiência de exploração, sem esconder currículo, projetos ou contato atrás do jogo.",
+        decisions: [
+          {
+            title: "Um mundo inteiro, com saída direta",
+            text: "O navegador abre diretamente na fazenda fullscreen, mas o currículo existe em uma rota independente, renderizada sem carregar o jogo.",
+          },
+          {
+            title: "Arte controlada por código",
+            text: "Sprites PNG originais são desenhados por um gerador local com paleta e dimensões reproduzíveis, em vez de depender de imagens externas.",
+          },
+          {
+            title: "Regras separadas da cena",
+            text: "Cultivo, economia, calendário e persistência local ficam em módulos TypeScript testáveis; Phaser apresenta o mapa, caminho por clique e rotinas.",
+          },
+        ],
+        evidence:
+          "O repositório público reúne geração de 60 assets, testes de regras e verificações no navegador para cultivo, história, currículo e responsividade.",
+      },
     },
     {
+      id: "meta",
       name: "Meta-Developer Portfolio",
       category: "Portfólio interativo",
       description:
         "Uma experiência que simula a construção de um site em uma IDE: conversa, código e preview acompanham uma história interativa, com escolha de temas.",
       technologies: ["React", "Vite", "Tailwind CSS", "Framer Motion"],
       url: "https://github.com/mhdsilva/meta-portifolio",
+      caseStudy: {
+        title: "Um portfólio que se constrói.",
+        context:
+          "Uma experiência que encena pair programming: uma conversa pré-definida conduz a construção visual de um portfólio em uma interface inspirada em IDE.",
+        decisions: [
+          {
+            title: "Seis atos, uma narrativa",
+            text: "A linha do tempo parte de HTML sem estilo, passa por identidade e carreira, encena uma falha visual e termina com a correção do projeto.",
+          },
+          {
+            title: "Estado explícito para o preview",
+            text: "A narrativa vive em uma timeline de dados e o preview responde a ações por reducer, deixando a sequência visual separada do painel de conversa.",
+          },
+          {
+            title: "Código como camada de descoberta",
+            text: "Após o desfecho, o Code Lens revela trechos do componente sob o cursor, conectando a experiência visual à implementação.",
+          },
+        ],
+        evidence:
+          "O README público descreve a arquitetura com React 19, Vite 7, Tailwind CSS 4, Framer Motion 12, narrativa em seis atos e comportamento responsivo.",
+      },
     },
   ],
 } as const;
