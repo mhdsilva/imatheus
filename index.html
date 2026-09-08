@@ -8,16 +8,17 @@
       name="description"
       content="Portfólio de Matheus Henrique da Silva: Tech Lead na Humanizadas, cofundador da Kairoo Tech e engenheiro de software. Explore sua trajetória em uma fazenda interativa."
     />
-    <title>Matheus Henrique da Silva · Vale do Matheus</title>
+    <title>Matheus Henrique da Silva · Portfólio</title>
     <link rel="icon" href="/assets/sunflower.png" type="image/png" />
   </head>
-  <body>
+  <body class="opening">
     <div id="app">
       <main>
         <section class="game-shell" aria-label="Jogo de fazenda interativo">
           <div class="game-stage" id="game-stage">
             <div
               id="game"
+              tabindex="0"
               aria-label="Clique no chão para andar. Clique em personagens, plantações e construções para interagir."
             ></div>
             <div
@@ -28,61 +29,110 @@
               aria-labelledby="loading-title"
             >
               <div class="loading-content">
-                <div class="loading-eyebrow">
-                  UM PEQUENO MUNDO PARA DESCOBRIR
+                <div class="intro-lead">
+                  <div class="loading-eyebrow">
+                    <img src="/assets/sunflower.png" alt="" /> ENGENHARIA DE
+                    SOFTWARE · PORTFÓLIO PESSOAL
+                  </div>
+                  <h1 id="loading-title">Matheus<br /><em>Henrique.</em></h1>
+                  <p class="loading-subtitle">
+                    Meu portfólio, um lugar para explorar.
+                  </p>
+                  <p class="intro-description">
+                    Sou engenheiro de software, Tech Lead e cofundador da Kairoo
+                    Tech. Aqui, minha trajetória divide espaço com uma fazenda
+                    que você pode cuidar.
+                  </p>
+                  <p class="intro-choice">
+                    Tem alguns minutos? Entre e descubra. Está buscando meu
+                    perfil profissional? Vá direto ao currículo.
+                  </p>
+                  <div class="intro-actions">
+                    <button id="enter-game" disabled>
+                      Preparando a fazenda…</button
+                    ><a class="intro-resume" href="%BASE_URL%curriculo/"
+                      >Ver currículo <span aria-hidden="true">↗</span
+                      ><small>Experiências, tecnologias e contato</small></a
+                    >
+                  </div>
+                  <div class="intro-load">
+                    <div class="load-track">
+                      <span id="load-progress"></span>
+                    </div>
+                    <p id="load-status" role="status">
+                      Preparando a terra e acordando as galinhas…
+                    </p>
+                  </div>
                 </div>
-                <img
-                  class="loading-flower"
-                  src="/assets/sunflower.png"
-                  alt=""
-                />
-                <h1 id="loading-title">vale do<br /><em>matheus</em></h1>
-                <p class="loading-subtitle">Entre, a porteira está aberta.</p>
-                <div class="loading-rule"></div>
-                <div class="loading-tips">
-                  <div>
-                    <span>01</span>
-                    <p>
-                      <strong>Escolha seu caminho</strong>Clique no chão para
-                      passear pela fazenda.
-                    </p>
-                  </div>
-                  <div>
-                    <span>02</span>
-                    <p>
-                      <strong>Conheça quem mora aqui</strong>Clique nos
-                      personagens e lugares para conversar e descobrir meu
-                      trabalho.
-                    </p>
-                  </div>
-                  <div>
-                    <span>03</span>
-                    <p>
-                      <strong>Cultive alguma coisa boa</strong>Colha, venda,
-                      plante. O vale cresce com você.
-                    </p>
-                  </div>
-                </div>
-                <div class="load-track"><span id="load-progress"></span></div>
-                <p id="load-status">
-                  Preparando a terra e acordando as galinhas…
-                </p>
-                <button id="enter-game" disabled>Preparando a fazenda…</button
-                ><small class="loading-note"
-                  >FEITO PARA EXPLORAR SEM PRESSA · PROGRESSO SALVO NESTE
-                  NAVEGADOR</small
+                <section
+                  class="intro-guide"
+                  aria-labelledby="intro-guide-title"
                 >
+                  <span class="intro-guide-kicker">SE ESCOLHER EXPLORAR</span>
+                  <h2 id="intro-guide-title">A porteira está aberta.</h2>
+                  <div class="loading-tips">
+                    <div>
+                      <span>01</span>
+                      <p>
+                        <strong>O mouse mostra o caminho</strong>Clique no chão
+                        para andar. Clique em moradores, construções e objetos:
+                        o personagem se aproxima para interagir. Não precisa
+                        usar o teclado.
+                      </p>
+                    </div>
+                    <div>
+                      <span>02</span>
+                      <p>
+                        <strong>Comece com uma pequena colheita</strong>Colha as
+                        plantas maduras, venda no mercado e compre sementes.
+                        Escolha uma semente na barra, clique na terra para
+                        plantar e clique outra vez para regar.
+                      </p>
+                    </div>
+                    <div>
+                      <span>03</span>
+                      <p>
+                        <strong>Uma história espera por você</strong>Abra o
+                        Diário para ler cartas e ajudar a recuperar a feira. A
+                        cada novo dia de visita há pedidos e descobertas. Ganhe
+                        decorações e veja a fazenda mudar.
+                      </p>
+                    </div>
+                  </div>
+                  <p class="intro-reassurance">
+                    Fique cinco minutos ou o tempo que quiser. Se passar alguns
+                    dias fora, sua história continua esperando — sem perder o
+                    progresso.
+                  </p>
+                </section>
+                <footer class="intro-footer">
+                  <span>Seu progresso fica salvo neste navegador.</span
+                  ><span
+                    >O currículo está sempre disponível, sem completar
+                    missões.</span
+                  >
+                </footer>
               </div>
             </div>
             <div class="world-header">
               <div class="world-name">
                 <img src="/assets/sunflower.png" alt="" /><span
-                  >vale do matheus<small
-                    >☀ PRIMAVERA · DIA <b id="day">1</b></small
+                  >Matheus Henrique<small
+                    >☀ PRIMAVERA · VISITA <b id="day">1</b></small
                   ></span
                 >
               </div>
               <nav class="world-nav" aria-label="Menu do jogo">
+                <a class="resume-shortcut" href="%BASE_URL%curriculo/"
+                  >Currículo <span aria-hidden="true">↗</span></a
+                >
+                <button
+                  id="journal-button"
+                  data-page="journal"
+                  title="Cartas do Vale"
+                >
+                  ✉ <span>Diário</span>
+                </button>
                 <button
                   id="help-button"
                   aria-label="Como jogar"
@@ -90,11 +140,18 @@
                 >
                   ?</button
                 ><button data-page="directory" class="portfolio-button">
-                  ☰ <span>Portfólio</span>
+                  ☰ <span>Conhecer Matheus</span>
                 </button>
               </nav>
             </div>
             <div class="hud-left">
+              <button
+                class="stamp-wallet"
+                data-page="decor"
+                title="Usar selos da feira"
+              >
+                ✧ <strong id="stamp-count">0</strong> <span>selos</span>
+              </button>
               <div class="money">
                 <span class="coin">●</span><strong id="money">35</strong
                 ><span>moedas</span>
@@ -109,9 +166,32 @@
                 ♫ <span>som desligado</span>
               </button>
             </div>
+            <aside
+              class="portfolio-context"
+              role="note"
+              aria-label="Como explorar o portfólio"
+            >
+              <span>PORTFÓLIO INTERATIVO</span>
+              <p>
+                Esta fazenda conta a trajetória profissional de Matheus
+                Henrique. Cada lugar revela uma parte dela.
+              </p>
+              <button data-page="directory">Ver meu portfólio →</button>
+            </aside>
+            <aside
+              id="portfolio-tour"
+              class="portfolio-tour"
+              hidden
+              aria-live="polite"
+            >
+              <span id="tour-kicker">PASSEIO PROFISSIONAL</span>
+              <h2 id="tour-title"></h2>
+              <p id="tour-description"></p>
+              <div id="tour-actions"></div>
+            </aside>
             <aside class="quest">
               <div class="quest-heading">
-                <span>✧</span> SEU PRIMEIRO DIA
+                <span>✧</span> <span id="quest-kicker">CARTAS DO VALE</span>
                 <button
                   id="quest-toggle"
                   aria-label="Recolher objetivos"
@@ -121,12 +201,15 @@
                 </button>
               </div>
               <div id="quest-body">
-                <h2>Da terra, boas histórias.</h2>
-                <p>Uma pequena colheita.<br />O começo de algo maior.</p>
+                <h2 id="quest-title">Da terra, boas histórias.</h2>
+                <p id="quest-description">Chegou uma carta para você.</p>
                 <ul id="quest-list"></ul>
                 <div class="quest-progress">
                   <span id="quest-progress"></span>
                 </div>
+                <button class="quest-diary" data-page="journal">
+                  Abrir meu diário →
+                </button>
               </div>
             </aside>
             <div class="scene-label">

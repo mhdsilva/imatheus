@@ -10,6 +10,7 @@ import {
   stage,
   upgrade,
 } from "../src/model";
+import { newTour } from "../src/tour";
 
 test("a visitor completes the harvest, sell, purchase, plant and grow loop", () => {
   const now = 2_000_000,
@@ -68,9 +69,21 @@ test("save restoration preserves progress and recovers safely from invalid data"
     "{}",
     JSON.stringify({ ...state, coins: -1 }),
     JSON.stringify({ ...state, plots: [{}] }),
-    JSON.stringify({ ...state, version: 2 }),
+    JSON.stringify({ ...state, version: 999 }),
   ])
     assert.equal(restore(value).coins, 35);
+});
+test("v2 save without a tour keeps farm and valley progress", () => {
+  const state = newFarm();
+  state.coins = 77;
+  state.plots[0].crop = null;
+  const legacy = structuredClone(state) as { tour?: unknown };
+  delete legacy.tour;
+  const restored = restore(JSON.stringify(legacy));
+  assert.equal(restored.coins, 77);
+  assert.equal(restored.plots[0].crop, null);
+  assert.deepEqual(restored.valley, state.valley);
+  assert.deepEqual(restored.tour, newTour());
 });
 test("paths navigate around fences without crossing blocked cells", () => {
   const walls = new Set(["2,0", "2,1", "2,2", "2,3"]);

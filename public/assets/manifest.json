@@ -214,5 +214,65 @@
   "shadow": {
     "width": 24,
     "height": 12
+  },
+  "mill-old": {
+    "width": 80,
+    "height": 110
+  },
+  "stall-old": {
+    "width": 80,
+    "height": 60
+  },
+  "well-old": {
+    "width": 42,
+    "height": 46
+  },
+  "workbench-old": {
+    "width": 48,
+    "height": 30
+  },
+  "mill": {
+    "width": 80,
+    "height": 110
+  },
+  "stall": {
+    "width": 80,
+    "height": 60
+  },
+  "well": {
+    "width": 42,
+    "height": 46
+  },
+  "workbench": {
+    "width": 48,
+    "height": 30
+  },
+  "mill-sails": {
+    "width": 64,
+    "height": 64
+  },
+  "letter": {
+    "width": 30,
+    "height": 24
+  },
+  "seed-pouch": {
+    "width": 20,
+    "height": 24
+  },
+  "flowerbed": {
+    "width": 48,
+    "height": 26
+  },
+  "picnic": {
+    "width": 58,
+    "height": 38
+  },
+  "bunting": {
+    "width": 72,
+    "height": 22
+  },
+  "lantern": {
+    "width": 16,
+    "height": 26
   }
 }

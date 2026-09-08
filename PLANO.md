@@ -6,6 +6,8 @@ Criar um portfólio pessoal apresentado como um jogo de fazenda 2D no navegador.
 
 Este documento registra o planejamento e as decisões de produto. A primeira versão jogável já está implementada; instruções de execução e limites atuais estão no README.
 
+O roteiro de evolução a partir de 8 de setembro de 2026 está em [Próximos passos do portfólio](docs/PLANO-EVOLUCAO.md), com estado atual, prioridades propostas, critérios de conclusão e limites de escopo. As propostas iniciais abaixo preservam o histórico; para os próximos passos, consulte esse roteiro.
+
 ## Decisões confirmadas
 
 - Repositório público `mhdsilva/imatheus`, com informações profissionais das seções reais do `meta-portifolio`. Somente o código será publicado por enquanto; hospedagem não foi autorizada nesta etapa.
@@ -150,7 +152,9 @@ Validar regras de compra, venda e crescimento, interrupção de caminhos, clique
 
 ## Evoluções futuras
 
-Trator dirigível, leite e ovos como produção, novas plantações, decoração, pedidos dos moradores, áreas desbloqueáveis e ciclo visual de dia e noite. Retorno em outros dias deve trazer conteúdo e progresso, sem punir a ausência.
+A expansão **Cartas do Vale** acrescenta sete capítulos em visitas não consecutivas, encomendas diárias, sete lembranças, amizade e três decorações. Moinho, poço, bancada e feira mudam conforme a história; os moradores incluem a feira em suas rotinas após a reconstrução. Especificação em `docs/superpowers/specs/2026-09-07-cartas-do-vale-design.md`.
+
+Trator dirigível, leite e ovos como produção, novas plantações, mais decorações e pedidos, áreas desbloqueáveis e ciclo visual de dia e noite. Retorno em outros dias deve trazer conteúdo e progresso, sem punir a ausência.
 
 Suporte a celular ainda não foi definido. A navegação por clique facilita a adaptação para toque, mas será necessário planejar tamanho de controles, enquadramento, ausência de hover e desempenho em telas menores.
 

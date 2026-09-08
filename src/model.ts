@@ -1,3 +1,6 @@
+import { newValley, restoreValley, type ValleyState } from "./valley";
+import { newTour, restoreTour, type TourState } from "./tour";
+
 export const CROPS = {
   carrot: {
     name: "Cenoura",
@@ -25,7 +28,7 @@ export type Crop = keyof typeof CROPS;
 export const cropKeys = Object.keys(CROPS) as Crop[];
 export type Plot = { crop: Crop | null; plantedAt: number; watered: boolean };
 export type FarmState = {
-  version: 1;
+  version: 2;
   coins: number;
   seeds: Record<Crop, number>;
   produce: Record<Crop, number>;
@@ -36,6 +39,8 @@ export type FarmState = {
   planted: number;
   startedAt: number;
   visited: string[];
+  tour: TourState;
+  valley: ValleyState;
 };
 export const emptyPlot = (): Plot => ({
   crop: null,
@@ -44,7 +49,8 @@ export const emptyPlot = (): Plot => ({
 });
 export function newFarm(now = Date.now()): FarmState {
   return {
-    version: 1,
+    version: 2,
+    valley: newValley(now),
     coins: 35,
     seeds: { carrot: 3, turnip: 1, corn: 0 },
     produce: { carrot: 0, turnip: 0, corn: 0 },
@@ -61,6 +67,7 @@ export function newFarm(now = Date.now()): FarmState {
     planted: 0,
     startedAt: now,
     visited: [],
+    tour: newTour(),
   };
 }
 export function stage(plot: Plot, now = Date.now()): number {
@@ -137,7 +144,7 @@ export function restore(raw: string | null, now = Date.now()): FarmState {
     const s = JSON.parse(raw);
     if (
       !s ||
-      s.version !== 1 ||
+      (s.version !== 1 && s.version !== 2) ||
       !count(s.coins) ||
       !count(s.harvested) ||
       !count(s.sold) ||
@@ -171,7 +178,12 @@ export function restore(raw: string | null, now = Date.now()): FarmState {
       !s.visited.every((v: unknown) => typeof v === "string")
     )
       return newFarm(now);
-    return s;
+    return {
+      ...s,
+      version: 2,
+      tour: restoreTour(s.tour),
+      valley: s.version === 1 ? newValley(now) : restoreValley(s.valley, now),
+    };
   } catch {
     return newFarm(now);
   }

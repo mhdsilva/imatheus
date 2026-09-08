@@ -820,6 +820,289 @@ save("hay");
 canvas(24, 12);
 ellipse(12, 6, 11, 5, "#557855");
 save("shadow");
+// Cartas do Vale: original, deterministic pixel artwork for the evolving village.
+for (const restored of [false, true]) {
+  canvas(80, 110);
+  ellipse(40, 104, 32, 5, "#678250");
+  poly(
+    [
+      [20, 100],
+      [26, 34],
+      [54, 34],
+      [62, 100],
+    ],
+    "ink",
+  );
+  poly(
+    [
+      [23, 98],
+      [29, 35],
+      [51, 35],
+      [59, 98],
+    ],
+    restored ? "cream" : "#a7a38a",
+  );
+  for (let y = 53; y < 99; y += 11) {
+    rect(25, y, 32, 2, restored ? "#c0aa7c" : "#878977");
+    rect(32 + (y % 3) * 6, y - 9, 1, 9, "#b3a788");
+  }
+  poly(
+    [
+      [17, 40],
+      [40, 10],
+      [63, 40],
+    ],
+    "ink",
+  );
+  poly(
+    [
+      [21, 37],
+      [40, 14],
+      [59, 37],
+    ],
+    restored ? "roofL" : "#887d65",
+  );
+  for (let y = 26; y < 38; y += 5)
+    rect(30 - (y - 26), y, 20 + (y - 26) * 2, 1, restored ? "roof" : "wood");
+  rect(34, 77, 14, 23, "ink");
+  rect(36, 79, 10, 21, "wood");
+  rect(37, 80, 1, 19, "woodL");
+  rect(43, 90, 2, 2, "yellow");
+  rect(35, 53, 12, 14, "ink");
+  rect(37, 55, 8, 10, restored ? "sky" : "wood");
+  rect(40, 55, 2, 10, "cream");
+  if (!restored) {
+    rect(17, 38, 48, 4, "wood");
+    poly(
+      [
+        [34, 21],
+        [38, 19],
+        [50, 73],
+        [46, 75],
+      ],
+      "woodL",
+    );
+    ellipse(24, 95, 10, 5, "green");
+    rect(38, 84, 11, 3, "#68694e");
+  }
+  save(restored ? "mill" : "mill-old");
+  canvas(80, 60);
+  ellipse(40, 56, 36, 3, "#6d8353");
+  rect(9, 21, 4, 36, "wood");
+  rect(67, 21, 4, 36, "wood");
+  rect(8, 42, 64, 12, "ink");
+  rect(10, 43, 60, 9, "woodL");
+  for (let x = 13; x < 70; x += 12) rect(x, 44, 1, 8, "wood");
+  if (restored) {
+    poly(
+      [
+        [7, 6],
+        [68, 6],
+        [78, 28],
+        [1, 28],
+      ],
+      "ink",
+    );
+    for (let i = 0; i < 6; i++) {
+      poly(
+        [
+          [9 + i * 10, 8],
+          [18 + i * 10, 8],
+          [26 + i * 10, 26],
+          [3 + i * 12, 26],
+        ],
+        i % 2 ? "cream" : "green",
+      );
+      rect(3 + i * 12, 27, 12, 5, i % 2 ? "light" : "leaf");
+    }
+    for (let i = 0; i < 8; i++) {
+      ellipse(16 + i * 7, 39, 4, 3, i % 2 ? "yellow" : "redL");
+      rect(16 + i * 7, 34, 1, 3, "green");
+    }
+  } else {
+    rect(10, 20, 61, 3, "wood");
+    poly(
+      [
+        [13, 42],
+        [15, 38],
+        [65, 52],
+        [62, 55],
+      ],
+      "wood",
+    );
+    ellipse(58, 50, 10, 3, "green");
+  }
+  save(restored ? "stall" : "stall-old");
+  canvas(42, 46);
+  ellipse(21, 39, 18, 6, "ink");
+  rect(4, 30, 34, 10, "#8d998b");
+  ellipse(21, 30, 17, 6, "#c0c3a8");
+  ellipse(21, 30, 12, 3, restored ? "blue" : "#69765f");
+  for (let x = 7; x < 37; x += 9) rect(x, 35, 1, 6, "#727e70");
+  rect(7, 10, 3, 23, "wood");
+  rect(32, 10, 3, 23, "wood");
+  poly(
+    [
+      [1, 14],
+      [21, 1],
+      [41, 14],
+    ],
+    "ink",
+  );
+  poly(
+    [
+      [4, 12],
+      [21, 3],
+      [38, 12],
+    ],
+    restored ? "roofL" : "wood",
+  );
+  rect(20, 14, 1, 15, "cream");
+  rect(18, 25, 7, 6, "woodL");
+  if (!restored) {
+    ellipse(9, 32, 6, 3, "green");
+    ellipse(28, 30, 5, 2, "leaf");
+  }
+  save(restored ? "well" : "well-old");
+  canvas(48, 30);
+  rect(6, 13, 4, 16, "wood");
+  rect(37, 13, 4, 16, "wood");
+  rect(7, 24, 32, 3, "woodL");
+  rect(2, 9, 44, 7, "ink");
+  rect(3, 9, 42, 4, restored ? "woodL" : "#978467");
+  if (restored) {
+    rect(13, 3, 3, 8, "wood");
+    rect(9, 2, 11, 4, "blue");
+    rect(27, 6, 12, 3, "cream");
+    rect(33, 4, 4, 2, "sky");
+  } else {
+    rect(8, 7, 19, 3, "wood");
+    rect(22, 4, 17, 4, "#afa07b");
+  }
+  save(restored ? "workbench" : "workbench-old");
+}
+canvas(64, 64);
+for (let i = 0; i < 4; i++) {
+  const transform = ([x, y]) => {
+    for (let n = 0; n < i; n++) [x, y] = [-y, x];
+    return [x + 32, y + 32];
+  };
+  poly(
+    [
+      [-2, -30],
+      [7, -30],
+      [4, -4],
+      [-2, 0],
+    ].map(transform),
+    "wood",
+  );
+  poly(
+    [
+      [0, -28],
+      [5, -28],
+      [3, -7],
+      [0, -5],
+    ].map(transform),
+    "cream",
+  );
+  for (let y = -25; y < -8; y += 5)
+    poly(
+      [
+        [0, y],
+        [5, y],
+        [5, y + 1],
+        [0, y + 1],
+      ].map(transform),
+      "woodL",
+    );
+}
+ellipse(32, 32, 5, 5, "ink");
+ellipse(32, 32, 3, 3, "woodL");
+save("mill-sails");
+canvas(30, 24);
+rect(2, 4, 26, 18, "woodL");
+rect(3, 3, 24, 17, "cream");
+poly(
+  [
+    [3, 4],
+    [15, 14],
+    [26, 4],
+  ],
+  "light",
+);
+rect(12, 12, 6, 5, "red");
+rect(13, 12, 3, 2, "redL");
+save("letter");
+canvas(20, 24);
+ellipse(10, 16, 8, 7, "wood");
+ellipse(9, 15, 6, 6, "cream");
+poly(
+  [
+    [5, 9],
+    [3, 3],
+    [15, 4],
+    [13, 10],
+  ],
+  "cream",
+);
+rect(5, 8, 9, 3, "red");
+rect(8, 14, 3, 5, "green");
+rect(10, 13, 3, 2, "leaf");
+rect(16, 2, 1, 5, "light");
+rect(14, 4, 5, 1, "light");
+save("seed-pouch");
+canvas(48, 26);
+rect(2, 15, 44, 9, "wood");
+rect(3, 15, 42, 3, "woodL");
+for (let x = 7; x < 45; x += 7) {
+  rect(x, 7, 2, 10, "green");
+  ellipse(x + 1, 6, 4, 3, x % 2 ? "redL" : "yellow");
+  rect(x, 5, 2, 2, "light");
+}
+save("flowerbed");
+canvas(58, 38);
+poly(
+  [
+    [8, 5],
+    [47, 5],
+    [56, 33],
+    [1, 33],
+  ],
+  "cream",
+);
+for (let y = 7; y < 33; y += 8)
+  for (let x = 9; x < 49; x += 10) rect(x, y, 5, 4, "redL");
+ellipse(37, 15, 10, 5, "light");
+ellipse(37, 15, 6, 3, "yellow");
+rect(12, 13, 15, 11, "wood");
+rect(14, 11, 11, 3, "woodL");
+rect(16, 9, 7, 2, "wood");
+save("picnic");
+canvas(72, 22);
+for (let x = 0; x < 72; x++)
+  rect(x, Math.round(2 + Math.sin((x / 72) * Math.PI) * 5), 1, 1, "wood");
+for (let i = 0; i < 6; i++) {
+  const x = i * 12 + 2,
+    y = Math.round(3 + Math.sin((x / 72) * Math.PI) * 5);
+  poly(
+    [
+      [x, y],
+      [x + 9, y],
+      [x + 5, y + 11],
+    ],
+    ["redL", "yellow", "sky"][i % 3],
+  );
+}
+save("bunting");
+canvas(16, 26);
+rect(7, 1, 2, 6, "wood");
+rect(3, 7, 10, 3, "wood");
+rect(3, 10, 10, 11, "yellow");
+rect(5, 11, 5, 8, "light");
+rect(2, 20, 12, 3, "wood");
+rect(3, 10, 1, 10, "woodL");
+rect(12, 10, 1, 10, "woodL");
+save("lantern");
 writeFileSync(
   new URL("manifest.json", out),
   JSON.stringify(metadata, null, 2) + "\n",

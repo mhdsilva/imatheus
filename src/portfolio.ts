@@ -70,7 +70,7 @@ export const portfolio = {
   },
   projects: [
     {
-      name: "Vale do Matheus",
+      name: "Portfólio em uma fazenda",
       category: "Portfólio jogável",
       description:
         "Uma fazenda em pixel art com navegação por clique, moradores com rotinas próprias, cultivo e comércio. Os sprites são desenhados e exportados por código.",

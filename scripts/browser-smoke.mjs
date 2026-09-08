@@ -38,7 +38,59 @@ try {
   );
   await snapshot("/tmp/vale-desktop.png");
   console.log("Fullscreen scene and loading screen verified.");
-  await page.locator("#welcome-close").click();
+  const portfolioGuide = page.getByRole("note", {
+    name: "Como explorar o portfólio",
+  });
+  await portfolioGuide
+    .getByRole("button", { name: "Ver meu portfólio" })
+    .click();
+  await page
+    .getByRole("heading", { name: "Explore o portfólio de Matheus" })
+    .waitFor();
+  await page.keyboard.press("Escape");
+  await page.locator(".portfolio-button").click();
+  await page.getByRole("button", { name: "Começar passeio" }).click();
+  await page.waitForFunction(
+    () => window.__farm.scene.portfolioStop?.id === "house",
+  );
+  assert.equal(
+    await page.evaluate(() => window.__farm.scene.playerPath.length),
+    0,
+  );
+  await page.locator('#portfolio-tour [data-tour="open-current"]').click();
+  await page.getByRole("heading", { name: "Prazer, Matheus." }).waitFor();
+  await page.keyboard.press("Escape");
+  await page.waitForFunction(() => window.__farm.state.tour.current === 1);
+  await page.locator('#portfolio-tour [data-tour="cancel"]').click();
+  await page.waitForFunction(() => window.__farm.state.tour.dismissed === true);
+  await page.reload({ waitUntil: "networkidle" });
+  await page.locator("#enter-game:enabled").click();
+  await page.locator('#portfolio-tour [data-tour="resume"]').click();
+  assert.equal(await page.evaluate(() => window.__farm.state.tour.current), 1);
+  await page.locator('#portfolio-tour [data-tour="open-current"]').click();
+  await page
+    .getByRole("heading", { name: "A oficina de ideias." })
+    .waitFor();
+  await page.keyboard.press("Escape");
+  await page.waitForFunction(() => window.__farm.state.tour.current === 2);
+  await page.locator('#portfolio-tour [data-tour="open-current"]').click();
+  await page
+    .getByRole("heading", { name: "Cada passo, uma história." })
+    .waitFor();
+  await page.keyboard.press("Escape");
+  await page.waitForFunction(
+    () =>
+      window.__farm.state.tour.current === 3 &&
+      window.__farm.state.tour.active === false,
+  );
+  await page.getByText("Agora você já conhece o caminho.").waitFor();
+  assert.deepEqual(
+    await page.evaluate(() => window.__farm.state.tour.visited),
+    ["about", "projects", "career"],
+  );
+  console.log("Professional tour destination does not move the player.");
+  if (await page.locator("#welcome-close").isVisible())
+    await page.locator("#welcome-close").click();
   const initial = await page.evaluate(() => ({
     x: window.__farm.scene.player.x,
     y: window.__farm.scene.player.y,
@@ -161,6 +213,13 @@ try {
     await page.evaluate(
       () => document.documentElement.scrollWidth <= innerWidth,
     ),
+    true,
+  );
+  assert.equal(
+    await page.locator("#portfolio-tour").evaluate((panel) => {
+      const rect = panel.getBoundingClientRect();
+      return rect.left >= 0 && rect.right <= innerWidth;
+    }),
     true,
   );
   assert.equal(

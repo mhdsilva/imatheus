@@ -1,6 +1,8 @@
 import Phaser from "phaser";
 import { assetPath } from "./assets";
+import { ValleyWorld, VALLEY_ASSETS } from "./valley-world";
 import { CROPS, findPath, stage, type FarmState, type Point } from "./model";
+import type { TourStop } from "./tour";
 
 export type WorldEvents = {
   state: FarmState;
@@ -9,6 +11,8 @@ export type WorldEvents = {
   interactPlot: (index: number) => void;
   open: (page: string, npc?: string) => void;
   notify: (message: string) => void;
+  care: (animal: "cow" | "chicken") => void;
+  discover: () => void;
   ready: () => void;
 };
 type Target = {
@@ -37,6 +41,14 @@ type Actor = {
 const TILE = 16,
   COLS = 60,
   ROWS = 40;
+const PORTFOLIO_STOP_TARGETS: Record<
+  TourStop,
+  { targetId: string; label: string }
+> = {
+  about: { targetId: "house", label: "1 de 3 · Conheça Matheus na casa" },
+  projects: { targetId: "tractor", label: "2 de 3 · Visite a oficina" },
+  career: { targetId: "Rosa", label: "3 de 3 · Encontre Rosa" },
+};
 const worldPoint = (p: Point): Point => ({
   x: p.x * TILE + 8,
   y: p.y * TILE + 8,
@@ -54,6 +66,7 @@ export class FarmScene extends Phaser.Scene {
   private playerPath: Point[] = [];
   private pending?: Target;
   private marker!: Phaser.GameObjects.Container;
+  private tourMarker!: Phaser.GameObjects.Container;
   private hover!: Phaser.GameObjects.Text;
   private groundPlots: Phaser.GameObjects.Image[] = [];
   private plants: Phaser.GameObjects.Image[] = [];
@@ -62,12 +75,16 @@ export class FarmScene extends Phaser.Scene {
   private lastRepath = 0;
   private lastDirection = 0;
   private highlight?: Target;
+  private portfolioStop?: Target;
+  private valleyWorld?: ValleyWorld;
+  private fairRoutesAdded = false;
   constructor(hooks: WorldEvents) {
     super("farm");
     this.hooks = hooks;
   }
   preload() {
     for (const key of [
+      ...VALLEY_ASSETS,
       "grass0",
       "grass1",
       "grass2",
@@ -149,12 +166,18 @@ export class FarmScene extends Phaser.Scene {
       id: "mailbox",
       x: 280,
       y: 296,
-      label: "Correio · vamos conversar",
-      action: () => this.hooks.open("contact"),
+      label: "Correio · cartas do vale",
+      action: () => this.hooks.open("journal"),
       sprite: mail,
     });
     this.drawGarden();
     this.drawPasture();
+    this.valleyWorld = new ValleyWorld(this, this.hooks.state, {
+      register: (target) => this.targets.push(target),
+      block: (x, y, w, h) => this.blockRect(x, y, w, h),
+      open: this.hooks.open,
+      discover: this.hooks.discover,
+    });
     for (const [x, y] of [
       [296, 286],
       [362, 279],
@@ -207,6 +230,13 @@ export class FarmScene extends Phaser.Scene {
         this.add.ellipse(0, 0, 3, 2, 0xfff1bc),
       ])
       .setDepth(2)
+      .setVisible(false);
+    this.tourMarker = this.add
+      .container(0, 0, [
+        this.add.ellipse(0, 0, 25, 10).setStrokeStyle(2, 0xffd879, 0.95),
+        this.add.ellipse(0, 0, 7, 3, 0xfff5c4),
+      ])
+      .setDepth(2.1)
       .setVisible(false);
     if (!matchMedia("(prefers-reduced-motion: reduce)").matches)
       this.tweens.add({
@@ -294,6 +324,7 @@ export class FarmScene extends Phaser.Scene {
       this.scale.off("resize", this.resize, this),
     );
     this.refreshGarden();
+    this.refreshValley();
     this.hooks.ready();
   }
   private resize() {
@@ -555,11 +586,7 @@ export class FarmScene extends Phaser.Scene {
       radius: key === "cow" ? 19 : 12,
       sprite,
       action: () => {
-        this.hooks.notify(
-          key === "cow"
-            ? "Muuu! Um carinho e um dia feliz. 🐄"
-            : "Có-có! Ela parece muito ocupada procurando sementes.",
-        );
+        this.hooks.care(key === "cow" ? "cow" : "chicken");
         this.tweens.add({
           targets: sprite,
           scaleY: 1.15,
@@ -585,6 +612,7 @@ export class FarmScene extends Phaser.Scene {
   }
   private getTarget(x: number, y: number) {
     const all = this.targets.filter((t) => {
+      if (t.sprite && !t.sprite.visible) return false;
       if (t.id.startsWith("plot-"))
         return Math.abs(t.x - x) < 12 && Math.abs(t.y - 5 - y) < 12;
       if (t.sprite) {
@@ -661,6 +689,27 @@ export class FarmScene extends Phaser.Scene {
       }
       this.marker.setPosition(p.x, p.y).setVisible(true);
     }
+  }
+  focusPortfolioStop(stop: TourStop) {
+    const config = PORTFOLIO_STOP_TARGETS[stop];
+    const target = this.targets.find((candidate) => candidate.id === config.targetId);
+    this.clearPortfolioStop();
+    if (!target) {
+      this.hooks.notify("O próximo lugar ainda está sendo preparado.");
+      return;
+    }
+    this.portfolioStop = target;
+    target.sprite?.setTint(0xffdf91);
+    this.tourMarker.setPosition(target.x, target.y + 5).setVisible(true);
+    this.hover
+      .setText(config.label)
+      .setPosition(target.x, target.y - 24)
+      .setVisible(true);
+  }
+  clearPortfolioStop() {
+    this.portfolioStop?.sprite?.clearTint();
+    this.portfolioStop = undefined;
+    this.tourMarker?.setVisible(false);
   }
   private routeTo(target: Target) {
     const start = gridPoint(this.player),
@@ -762,8 +811,23 @@ export class FarmScene extends Phaser.Scene {
       if (p.crop) this.plants[i].setTexture(`${p.crop}-${stage(p)}`);
     });
   }
+  refreshValley() {
+    this.valleyWorld?.refresh();
+    if (
+      !this.fairRoutesAdded &&
+      this.hooks.state.valley.chapter >= 7 &&
+      this.actors.length
+    ) {
+      for (const actor of this.actors.filter((a) =>
+        ["Lia", "Bento", "Rosa"].includes(a.name),
+      ))
+        actor.goals.push({ x: 440, y: 488 }, { x: 488, y: 488 });
+      this.fairRoutesAdded = true;
+    }
+  }
   update(time: number, delta: number) {
     if (!this.player) return;
+    this.valleyWorld?.update(time);
     const dt = Math.min(delta, 100) / 1000;
     if (!this.hooks.blocked()) {
       if (
@@ -860,6 +924,11 @@ export class FarmScene extends Phaser.Scene {
         a.target.y = a.sprite.y;
       }
     }
+    if (this.portfolioStop)
+      this.tourMarker.setPosition(
+        this.portfolioStop.x,
+        this.portfolioStop.y + 5,
+      );
     if (time - this.lastRefresh > 300) {
       this.refreshGarden();
       this.drawMinimap();
