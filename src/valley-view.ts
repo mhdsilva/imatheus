@@ -5,6 +5,7 @@ import {
   DECORATIONS,
   DISCOVERIES,
   RESIDENTS,
+  residentDialogue,
   type Resident,
   type Site,
 } from "./valley-content";
@@ -169,17 +170,8 @@ export function renderResidentStory(
 ) {
   const status = chapterStatus(farm, now),
     s = farm.valley;
-  const chapter = CHAPTERS[Math.min(s.chapter, 6)];
   const order = dailyRequest(farm);
-  const story =
-    status.mode === "complete"
-      ? {
-          Lia: "A feira está viva outra vez. Às vezes, tudo o que a gente precisa é de alguém que volte para conversar.",
-          Bento:
-            "O moinho está funcionando e já tenho novas ideias. Mas hoje também cabe uma pausa na feira.",
-          Rosa: "Sempre tem uma encomenda nova por aqui. E a mesa da feira continua com um lugar para você.",
-        }[npc]
-      : chapter.dialogue[npc];
+  const story = residentDialogue(farm, npc, now);
   let html = `<p class="dialogue-copy">${escape(story)}</p><div class="resident-friendship">♡ ${s.friendship[npc]} de amizade · ${s.daily.chatted.includes(npc) ? "bom te ver hoje" : "cada conversa aproxima"}</div>`;
   if (
     status.mode === "available" &&

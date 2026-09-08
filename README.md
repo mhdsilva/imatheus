@@ -86,4 +86,6 @@ Este repositório publica o código do portfólio. Hospedagem e deploy automáti
 
 Três moradores seguem rotinas; vacas e galinhas circulam nas áreas rurais. As atividades dos NPCs são ambientais e não alteram o inventário do visitante. O trator é um ponto de interação da oficina; direção, automação, leite e ovos ficam para expansões.
 
+Lia, Bento e Rosa exibem no cenário o que estão fazendo e alternam conversas após o primeiro encontro do dia. As falas acompanham o capítulo atual e, depois da feira, refletem a vida do vale restaurado.
+
 O layout se adapta a telas menores e recebe toques, mas a experiência principal é a navegação com mouse. Os painéis profissionais são HTML acessível por teclado; o mundo interativo ainda não oferece navegação completa para leitores de tela.

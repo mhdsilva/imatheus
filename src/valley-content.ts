@@ -1,8 +1,48 @@
 import type { Crop } from "./model";
+import type { FarmState } from "./model";
 
 export const RESIDENTS = ["Lia", "Bento", "Rosa"] as const;
 export type Resident = (typeof RESIDENTS)[number];
 export type Site = "bench" | "well" | "mill" | "fair";
+
+const ACTIVITIES: Record<Resident, readonly string[]> = {
+  Lia: ["rega a horta", "observa as flores", "leva colheita à praça", "cuida dos canteiros"],
+  Bento: ["confere as ferramentas", "ajusta o trator", "testa uma peça", "faz uma pausa"],
+  Rosa: ["separa os produtos", "confere as receitas", "organiza a banca"],
+};
+const AMBIENT_DIALOGUE: Record<Resident, readonly string[]> = {
+  Lia: [
+    "As plantas parecem ouvir quando alguém para um minuto para olhar. Talvez todo mundo seja um pouco assim.",
+    "Deixei algumas flores perto da janela. Pequenos sinais ajudam a lembrar que a casa está viva.",
+  ],
+  Bento: [
+    "O trator não saiu do lugar, mas hoje ele fez um barulho promissor. Isso já conta como conversa.",
+    "Uma ferramenta bem guardada economiza tempo. Uma boa companhia também.",
+  ],
+  Rosa: [
+    "Organizar uma banca é imaginar quem vai passar por ela. Sempre deixo espaço para surpresa.",
+    "Tem dia que uma receita começa com a colheita e termina com uma boa conversa.",
+  ],
+};
+
+export function residentActivity(npc: Resident, goal: number) {
+  const activities = ACTIVITIES[npc];
+  return activities[goal % activities.length];
+}
+
+export function residentDialogue(farm: FarmState, npc: Resident, now = Date.now()) {
+  const s = farm.valley;
+  if (s.chapter >= 7)
+    return {
+      Lia: "A feira está viva outra vez. Às vezes, tudo o que a gente precisa é de alguém que volte para conversar.",
+      Bento: "O moinho está funcionando e já tenho novas ideias. Mas hoje também cabe uma pausa na feira.",
+      Rosa: "Sempre tem uma encomenda nova por aqui. E a mesa da feira continua com um lugar para você.",
+    }[npc];
+  if (!s.daily.chatted.includes(npc))
+    return CHAPTERS[s.chapter].dialogue[npc];
+  const daySeed = new Date(now).getUTCDate();
+  return AMBIENT_DIALOGUE[npc][daySeed % AMBIENT_DIALOGUE[npc].length];
+}
 export type Chapter = {
   title: string;
   sender: string;

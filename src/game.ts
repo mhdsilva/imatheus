@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import { assetPath } from "./assets";
 import { ValleyWorld, VALLEY_ASSETS } from "./valley-world";
+import { residentActivity, type Resident } from "./valley-content";
 import { CROPS, findPath, stage, type FarmState, type Point } from "./model";
 import type { TourStop } from "./tour";
 
@@ -894,9 +895,8 @@ export class FarmScene extends Phaser.Scene {
         }
       } else {
         a.activity.setVisible(isPerson);
-        a.activity.setText(
-          a.name === "Lia" ? "❀" : a.name === "Bento" ? "…" : "♪",
-        );
+        if (isPerson)
+          a.activity.setText(residentActivity(a.name as Resident, a.goal));
         if (time > a.nextMove) {
           a.goal = (a.goal + 1) % a.goals.length;
           a.path = findPath(

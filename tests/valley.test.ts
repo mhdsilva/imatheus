@@ -2,6 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { newFarm, restore } from "../src/model";
 import * as valley from "../src/valley";
+import { residentActivity, residentDialogue } from "../src/valley-content";
 
 const morning = new Date("2026-09-07T15:00:00Z").getTime();
 
@@ -165,6 +166,19 @@ test("talking and caring repeatedly cannot farm friendship", () => {
   assert.equal(valley.careFor(farm, "cow", morning).ok, false);
   valley.talkTo(farm, "Lia", morning + 86400000);
   assert.ok(farm.valley.friendship.Lia > friendship);
+});
+
+test("resident routines and dialogue reflect their work and story progress", () => {
+  assert.equal(residentActivity("Lia", 0), "rega a horta");
+  assert.equal(residentActivity("Bento", 1), "ajusta o trator");
+  assert.equal(residentActivity("Rosa", 2), "organiza a banca");
+  const farm = farmAt();
+  const first = residentDialogue(farm, "Lia", morning);
+  valley.talkTo(farm, "Lia", morning);
+  const repeated = residentDialogue(farm, "Lia", morning);
+  assert.notEqual(first, repeated);
+  farm.valley.chapter = 7;
+  assert.match(residentDialogue(farm, "Rosa", morning), /feira/i);
 });
 
 test("decorations use earned stamps and can be toggled without being purchased twice", () => {

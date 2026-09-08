@@ -120,6 +120,8 @@ Prioridade: depois de consolidar a apresentação profissional.
 - Variar falas pelo capítulo e pelo que já aconteceu; evitar anunciar acontecimentos que ainda não foram liberados.
 - Pausar a atividade durante uma conversa e retomá-la ao terminar, com tratamento de caminhos bloqueados.
 
+Status em 8 de setembro de 2026: as rotinas agora mostram atividades textuais no mundo e cada morador alterna diálogo contextual após a primeira conversa diária. Quadros de animação de trabalho e cenas de amizade continuam como evolução futura.
+
 ### Critérios de conclusão
 
 - É possível reconhecer pelo menos uma atividade própria de cada morador observando o cenário.
