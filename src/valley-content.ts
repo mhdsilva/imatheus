@@ -4,6 +4,33 @@ import type { FarmState } from "./model";
 export const RESIDENTS = ["Lia", "Bento", "Rosa"] as const;
 export type Resident = (typeof RESIDENTS)[number];
 export type Site = "bench" | "well" | "mill" | "fair";
+export const POSTFAIR_EVENTS = [
+  {
+    id: "lia-garden",
+    npc: "Lia",
+    title: "Um jardim para dividir",
+    text: "Lia separou mudas para ampliar o jardim perto da casa. Ajude a escolher um lugar para a próxima flor.",
+    action: "Escolher o lugar da flor",
+    image: "flowerbed",
+  },
+  {
+    id: "bento-workshop",
+    npc: "Bento",
+    title: "Uma oficina mais viva",
+    text: "Bento quer deixar uma ferramenta pronta para quem visitar a feira. Passe na oficina e confira o ajuste.",
+    action: "Conferir o ajuste",
+    image: "workbench",
+  },
+  {
+    id: "rosa-table",
+    npc: "Rosa",
+    title: "Lugar na mesa",
+    text: "Rosa está preparando uma pequena mesa para as próximas visitas. Ajude a escolher o que fica no centro.",
+    action: "Preparar a mesa",
+    image: "picnic",
+  },
+] as const;
+export type PostfairEvent = (typeof POSTFAIR_EVENTS)[number];
 
 const ACTIVITIES: Record<Resident, readonly string[]> = {
   Lia: ["rega a horta", "observa as flores", "leva colheita à praça", "cuida dos canteiros"],
@@ -42,6 +69,15 @@ export function residentDialogue(farm: FarmState, npc: Resident, now = Date.now(
     return CHAPTERS[s.chapter].dialogue[npc];
   const daySeed = new Date(now).getUTCDate();
   return AMBIENT_DIALOGUE[npc][daySeed % AMBIENT_DIALOGUE[npc].length];
+}
+
+export function dailyPostfair(farm: FarmState): PostfairEvent {
+  const day = Math.floor(Date.parse(`${farm.valley.day}T12:00:00Z`) / 86400000);
+  const index =
+    ((day % POSTFAIR_EVENTS.length) +
+      POSTFAIR_EVENTS.length) %
+    POSTFAIR_EVENTS.length;
+  return POSTFAIR_EVENTS[index];
 }
 export type Chapter = {
   title: string;

@@ -182,6 +182,25 @@ try {
     console.log(`UI chapter ${chapterIndex + 1}: ${chapter.title}`);
   }
   assert.equal(progress.valley.chapter, 7);
+  if (await page.locator("#modal[open]").count())
+    await page.locator("#modal").evaluate((dialog) => dialog.close());
+  let postfairDone = false;
+  for (const npc of ["Lia", "Bento", "Rosa"]) {
+    await clickTarget(npc);
+    await page.locator("#modal[open]").waitFor();
+    const action = page.locator('[data-valley="postfair"]');
+    if (await action.count()) {
+      await action.click();
+      await page.waitForFunction(
+        () => window.__farm.state.valley.daily.postfairDone,
+      );
+      postfairDone = true;
+      break;
+    }
+    await page.keyboard.press("Escape");
+  }
+  assert.equal(postfairDone, true);
+  await page.keyboard.press("Escape");
   const textures = await page.evaluate(() =>
     window.__farm.scene.children
       .getChildren()

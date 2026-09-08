@@ -14,6 +14,7 @@ import {
   discover,
   buyDecoration,
   toggleDecoration,
+  completePostfair,
 } from "./valley";
 import { RESIDENTS, type Resident, type Site } from "./valley-content";
 import {
@@ -363,8 +364,10 @@ document.addEventListener("click", (event) => {
               ? workAt(state, el.dataset.site as Site)
               : action === "buy"
                 ? buyDecoration(state, el.dataset.decoration!)
-                : action === "toggle"
+              : action === "toggle"
                   ? toggleDecoration(state, el.dataset.decoration!)
+                  : action === "postfair"
+                    ? completePostfair(state, npc)
                   : null;
     if (result) {
       updateUI();

@@ -139,6 +139,8 @@ Chegar e perceber uma novidade → escolher uma atividade principal → conversa
 
 Começar com um conjunto finito e bem escrito de acontecimentos pós-feira. Exemplos de propostas: preparar uma banca temática com Rosa, ajudar Bento em uma melhoria da oficina e organizar um jardim com Lia. Esses acontecimentos são ficção da fazenda, não relatos da carreira real.
 
+Status em 8 de setembro de 2026: a primeira entrega está implementada com três variações diárias (Lia, Bento e Rosa), uma recompensa única por data e um detalhe visual persistente após a conclusão. A cadeia maior de eventos e novas cenas continua como evolução futura.
+
 - Oferecer uma atividade principal por visita, com alternativas simples quando depender de um recurso que o visitante não tem.
 - Preservar encomendas e descobertas existentes, evitando apresentar muitas obrigações simultâneas.
 - Alternar atividades entre cultivo, conversa, exploração e preparação da feira.
@@ -223,7 +225,7 @@ Antes de executar cada etapa, escrever um plano técnico limitado a ela, com int
 - [x] Detalhar tecnicamente e implementar o passeio profissional opcional.
 - [ ] Preparar os dois primeiros cases públicos e validar seu conteúdo com Matheus.
 - [ ] Evoluir atividades e pequenas histórias dos três moradores.
-- [ ] Criar o primeiro conjunto de acontecimentos pós-feira e testar visitas curtas.
+- [x] Criar o primeiro conjunto de acontecimentos pós-feira e testar visitas curtas.
 - [ ] Reavaliar a prioridade entre personalização e produção animal com base nas partidas.
 
 O primeiro ponto de revisão deve observar duas experiências completas: alguém que quer apenas o currículo e alguém que entra para explorar. Perguntas úteis: ficou claro quem é Matheus? Qual projeto chamou atenção? Onde procuraria contato? Em que momento não soube o que fazer? Qual novidade daria vontade de ver em outra visita?

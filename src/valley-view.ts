@@ -6,6 +6,7 @@ import {
   DISCOVERIES,
   RESIDENTS,
   residentDialogue,
+  dailyPostfair,
   type Resident,
   type Site,
 } from "./valley-content";
@@ -181,6 +182,9 @@ export function renderResidentStory(
     html += `<section class="resident-request"><h3>${status.chapter.title}</h3>${goals(farm, now)}<button class="primary-button" data-valley="chapter" data-resident="${npc}" ${status.ready ? "" : "disabled"}>Entregar e continuar a história →</button></section>`;
   if (order.npc === npc)
     html += `<section class="resident-request daily-resident"><span>PEDIDO DE HOJE</span><p>${escape(order.text)}</p><button class="secondary-button" data-valley="request" data-resident="${npc}" ${s.daily.delivered || farm.produce[order.crop] < order.count ? "disabled" : ""}>${s.daily.delivered ? "✓ Encomenda recebida" : `Entregar ${order.count} ${CROPS[order.crop].plural} · +1 selo`}</button></section>`;
+  const postfair = dailyPostfair(farm);
+  if (s.chapter >= 7 && postfair.npc === npc)
+    html += `<section class="resident-request postfair-resident"><span>ATIVIDADE DE HOJE</span><h3>${escape(postfair.title)}</h3><p>${escape(postfair.text)}</p><button class="secondary-button" data-valley="postfair" data-resident="${npc}" ${s.daily.postfairDone ? "disabled" : ""}>${s.daily.postfairDone ? "✓ Atividade concluída" : `${escape(postfair.action)} · +1 selo`}</button></section>`;
   return html;
 }
 
@@ -217,10 +221,15 @@ export function updateDailyHud(farm: FarmState, now = Date.now()) {
           ? "Pequenos passos mudam este lugar."
           : "Chegou uma carta para você. Abra o diário para começar.",
   );
+  const postfair = dailyPostfair(farm);
   const tasks =
     status.mode === "available" && s.letterRead
       ? status.tasks
       : [
+          {
+            done: s.daily.postfairDone,
+            label: `Ajudar ${postfair.npc} com a atividade do dia`,
+          },
           {
             done: s.daily.delivered,
             label: `Ajudar ${dailyRequest(farm).npc} com a encomenda`,

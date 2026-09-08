@@ -3,6 +3,8 @@ import {
   REQUESTS,
   DISCOVERIES,
   DECORATIONS,
+  POSTFAIR_EVENTS,
+  dailyPostfair,
   RESIDENTS,
   type Resident,
   type Decoration,
@@ -28,6 +30,8 @@ export type ValleyState = {
     seeded: boolean;
     delivered: boolean;
     discovered: boolean;
+    postfairId: string;
+    postfairDone: boolean;
     chatted: Resident[];
     cared: string[];
   };
@@ -54,6 +58,12 @@ function newDaily(day: string): ValleyState["daily"] {
     seeded: false,
     delivered: false,
     discovered: false,
+    postfairId:
+      POSTFAIR_EVENTS[
+        ((dayNumber(day) % POSTFAIR_EVENTS.length) + POSTFAIR_EVENTS.length) %
+          POSTFAIR_EVENTS.length
+      ].id,
+    postfairDone: false,
     chatted: [],
     cared: [],
   };
@@ -120,7 +130,16 @@ export function restoreValley(raw: unknown, now = Date.now()): ValleyState {
       !strings(s.daily.cared)
     )
       return newValley(now);
-    return s;
+    const event = POSTFAIR_EVENTS.find((item) => item.id === s.daily.postfairId);
+    return {
+      ...s,
+      daily: {
+        ...s.daily,
+        postfairId: event?.id ?? newDaily(s.day).postfairId,
+        postfairDone:
+          typeof s.daily.postfairDone === "boolean" ? s.daily.postfairDone : false,
+      },
+    };
   } catch {
     return newValley(now);
   }
@@ -334,6 +353,25 @@ export function deliverRequest(
     true,
     "Encomenda entregue! +30 moedas, +1 selo e um sorriso de agradecimento.",
   );
+}
+export function completePostfair(
+  farm: FarmState,
+  npc: Resident,
+  now = Date.now(),
+): ActionResult {
+  beginDay(farm, now);
+  if (farm.valley.chapter < 7)
+    return result(false, "A feira ainda está sendo preparada.");
+  const event = dailyPostfair(farm);
+  if (farm.valley.daily.postfairDone)
+    return result(false, "A atividade de hoje já foi concluída.");
+  if (event.npc !== npc)
+    return result(false, `Hoje, ${event.npc} precisa de uma pequena ajuda.`);
+  farm.valley.daily.postfairDone = true;
+  farm.valley.tokens++;
+  farm.valley.friendship[npc]++;
+  farm.coins += 15;
+  return result(true, `${event.title} concluído. +1 selo e +15 moedas.`);
 }
 export function discover(farm: FarmState, now = Date.now()): ActionResult {
   beginDay(farm, now);

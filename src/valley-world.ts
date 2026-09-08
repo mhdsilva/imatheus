@@ -1,6 +1,6 @@
 import type Phaser from "phaser";
 import type { FarmState } from "./model";
-import type { Site } from "./valley-content";
+import { dailyPostfair, type Site } from "./valley-content";
 import { dailyDiscovery } from "./valley";
 
 export const VALLEY_ASSETS = [
@@ -46,6 +46,7 @@ export class ValleyWorld {
   private sails: Phaser.GameObjects.Image;
   private flowers: Phaser.GameObjects.Image;
   private riverLights: Phaser.GameObjects.Image[] = [];
+  private postfairAccent: Phaser.GameObjects.Image;
   private discovery: Target;
   private reducedMotion = matchMedia("(prefers-reduced-motion: reduce)")
     .matches;
@@ -141,6 +142,7 @@ export class ValleyWorld {
       action: hooks.discover,
     };
     hooks.register(this.discovery);
+    this.postfairAccent = this.prop("lantern", 520, 420).setScale(0.7);
     this.refresh();
   }
   private prop(key: string, x: number, y: number) {
@@ -174,6 +176,18 @@ export class ValleyWorld {
       .setPosition(x, y)
       .setDepth(y)
       .setVisible(!s.daily.discovered);
+    const postfair = dailyPostfair(this.farm);
+    const accentPosition: Record<string, [number, number]> = {
+      "lia-garden": [347, 278],
+      "bento-workshop": [600, 440],
+      "rosa-table": [518, 487],
+    };
+    const [accentX, accentY] = accentPosition[postfair.id];
+    this.postfairAccent
+      .setTexture(postfair.image)
+      .setPosition(accentX, accentY)
+      .setDepth(accentY)
+      .setVisible(s.chapter >= 7 && s.daily.postfairDone);
   }
   update(time: number) {
     if (this.reducedMotion) return;

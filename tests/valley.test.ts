@@ -2,7 +2,11 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { newFarm, restore } from "../src/model";
 import * as valley from "../src/valley";
-import { residentActivity, residentDialogue } from "../src/valley-content";
+import {
+  dailyPostfair,
+  residentActivity,
+  residentDialogue,
+} from "../src/valley-content";
 
 const morning = new Date("2026-09-07T15:00:00Z").getTime();
 
@@ -179,6 +183,24 @@ test("resident routines and dialogue reflect their work and story progress", () 
   assert.notEqual(first, repeated);
   farm.valley.chapter = 7;
   assert.match(residentDialogue(farm, "Rosa", morning), /feira/i);
+});
+
+test("post-fair activity rewards one short visit and resets on a new date", () => {
+  const farm = farmAt();
+  farm.valley.chapter = 7;
+  const event = dailyPostfair(farm);
+  const coins = farm.coins;
+  const tokens = farm.valley.tokens;
+  assert.equal(valley.completePostfair(farm, "Lia", morning).ok, event.npc === "Lia");
+  if (event.npc !== "Lia") {
+    assert.equal(valley.completePostfair(farm, event.npc, morning).ok, true);
+  }
+  assert.equal(farm.valley.daily.postfairDone, true);
+  assert.equal(farm.coins, coins + 15);
+  assert.equal(farm.valley.tokens, tokens + 1);
+  assert.equal(valley.completePostfair(farm, event.npc, morning).ok, false);
+  valley.beginDay(farm, morning + 86400000);
+  assert.equal(farm.valley.daily.postfairDone, false);
 });
 
 test("decorations use earned stamps and can be toggled without being purchased twice", () => {
