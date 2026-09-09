@@ -42,7 +42,7 @@ O desenvolvimento usa polling de um segundo em `vite.config.ts`, evitando o erro
 - Guarde a carta para receber sementes. Converse, cultive, cuide dos animais e visite os locais indicados; entregue os produtos ao morador para concluir o capítulo.
 - A cada nova data há uma encomenda e um pacote escondido no gramado. Pedidos de cultivo entregam sementes automaticamente; pedidos de produto animal pedem leite ou ovos recolhidos no celeiro. Entregue o item ao morador indicado.
 - Ganhe selos da feira e troque por flores, piquenique e bandeirinhas em **Diário → Meu cantinho**. Decorações podem ser guardadas e recolocadas sem pagar novamente.
-- Em **Diário → Meu personagem**, escolha entre três paletas visuais. A aparência muda imediatamente, acompanha caminhada e diálogos e fica salva neste navegador; ela não altera as informações profissionais nem a economia.
+- Em **Diário → Meu personagem**, escolha entre três paletas visuais e dois acessórios (lenço ou bolsa de ferramentas). A combinação muda imediatamente, acompanha caminhada e diálogos e fica salva neste navegador; ela não altera as informações profissionais nem a economia.
 - Use o menu Portfólio dentro do jogo para acessar os conteúdos diretamente. Escape fecha as janelas. O botão ? reabre as instruções.
 - Em **Conhecer Matheus**, escolha **Começar passeio** para uma rota opcional por apresentação, projetos e trajetória. Ela pode ser pausada e retomada; currículo e seções continuam livres.
 
@@ -54,8 +54,8 @@ Saves v1 e v2 migram preservando a fazenda; o inventário animal e as memórias 
 
 ## Organização
 
-- `scripts/generate-assets.mjs`: desenhos em pixels, codificador PNG e manifesto das imagens. Execute `npm run assets` para gerar os 64 arquivos em `public/assets`. O comando também roda antes do desenvolvimento e do build.
-- `src/model.ts`: regras de cultivo, inventário, economia, aparência, validação de salvamentos e busca de caminhos.
+- `scripts/generate-assets.mjs`: desenhos em pixels, codificador PNG e manifesto das imagens. Execute `npm run assets` para gerar os 70 arquivos em `public/assets`. O comando também roda antes do desenvolvimento e do build.
+- `src/model.ts`: regras de cultivo, inventário, economia, aparência e acessórios, validação de salvamentos e busca de caminhos.
 - `src/valley.ts` e `src/valley-content.ts`: calendário, capítulos, amizade, encomendas e recompensas.
 - `src/valley-view.ts`, `src/valley.css` e `src/valley-world.ts`: diário, coleção, decoração e reconstrução do cenário.
 - `src/game.ts`: mapa, cenário, movimento, rotinas e interações.

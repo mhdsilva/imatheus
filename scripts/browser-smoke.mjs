@@ -97,7 +97,15 @@ try {
       window.__farm.state.appearance === "sunset" &&
       window.__farm.scene.player.texture.key === "player-sunset",
   );
-  console.log("Character appearance selection and live sprite swap verified.");
+  await page.locator('[data-accessory="scarf"]').click();
+  await page.waitForFunction(
+    () =>
+      window.__farm.state.accessory === "scarf" &&
+      window.__farm.scene.player.texture.key === "player-sunset-scarf",
+  );
+  console.log(
+    "Character appearance, accessory and live sprite swaps verified.",
+  );
   await page.keyboard.press("Escape");
   const initial = await page.evaluate(() => ({
     x: window.__farm.scene.player.x,

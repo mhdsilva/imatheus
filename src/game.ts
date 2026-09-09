@@ -3,10 +3,11 @@ import { assetPath } from "./assets";
 import { ValleyWorld, VALLEY_ASSETS } from "./valley-world";
 import { residentActivity, type Resident } from "./valley-content";
 import {
-  APPEARANCES,
+  accessoryKeys,
   CROPS,
   appearanceKeys,
   findPath,
+  playerSprite,
   stage,
   type FarmState,
   type Point,
@@ -50,7 +51,9 @@ type Actor = {
 const TILE = 16,
   COLS = 60,
   ROWS = 40,
-  PLAYER_SPRITES = appearanceKeys.map((key) => APPEARANCES[key].sprite),
+  PLAYER_SPRITES = appearanceKeys.flatMap((appearance) =>
+    accessoryKeys.map((accessory) => playerSprite(appearance, accessory)),
+  ),
   CHARACTER_SPRITES = [...PLAYER_SPRITES, "farmer", "mechanic", "merchant"];
 const PORTFOLIO_STOP_TARGETS: Record<
   TourStop,
@@ -233,7 +236,12 @@ export class FarmScene extends Phaser.Scene {
           repeat: -1,
         });
     this.player = this.add
-      .sprite(456, 376, APPEARANCES[this.hooks.state.appearance].sprite, 0)
+      .sprite(
+        456,
+        376,
+        playerSprite(this.hooks.state.appearance, this.hooks.state.accessory),
+        0,
+      )
       .setOrigin(0.5, 1)
       .setDepth(376)
       .setScale(0.62);
@@ -843,7 +851,10 @@ export class FarmScene extends Phaser.Scene {
   }
   private refreshPlayerAppearance() {
     if (!this.player) return;
-    const sprite = APPEARANCES[this.hooks.state.appearance].sprite;
+    const sprite = playerSprite(
+      this.hooks.state.appearance,
+      this.hooks.state.accessory,
+    );
     if (this.player.texture.key !== sprite)
       this.player.setTexture(sprite, this.lastDirection * 4);
   }
@@ -886,7 +897,10 @@ export class FarmScene extends Phaser.Scene {
             this.playerPath,
             94,
             dt,
-            APPEARANCES[this.hooks.state.appearance].sprite,
+            playerSprite(
+              this.hooks.state.appearance,
+              this.hooks.state.accessory,
+            ),
           );
       if (direction >= 0) this.lastDirection = direction;
       if (crossing) this.player.anims.stop();

@@ -398,7 +398,7 @@ save("board");
 
 // A 32 × 48 source frame leaves room for facial features, layered clothing and
 // replaceable hair / hat / outfit palettes, while rendering at a small world size.
-function person(name, shirt, hat, overrides = {}) {
+function person(name, shirt, hat, overrides = {}, accessory = "none") {
   canvas(128, 192);
   const outfits = {
     player: {
@@ -537,6 +537,16 @@ function person(name, shirt, hat, overrides = {}) {
         r(23, 12, 3, 3, "#e4ba81");
         r(10, 10, 1, 10, "#8c6648");
       }
+      if (accessory === "scarf") {
+        r(10, 22, 13, 3, "#e57b59");
+        r(20, 24, 5, 7, "#bd594b");
+        r(21, 24, 3, 2, "#f0b66a");
+      } else if (accessory === "satchel") {
+        r(21, 22, 3, 14, "#98603d");
+        r(22, 30, 7, 6, "#c68a4e");
+        r(23, 31, 5, 1, "#f0cc7a");
+        r(24, 34, 2, 1, "#493d39");
+      }
     }
   save(name);
   metadata[name].frameWidth = 32;
@@ -544,19 +554,28 @@ function person(name, shirt, hat, overrides = {}) {
   metadata[name].directions = ["down", "left", "right", "up"];
   metadata[name].framesPerDirection = 4;
 }
-person("player", "#eee0b7", true);
-person("player-sunset", "#d98262", true, {
-  hair: "#5a3e46",
-  pants: "#714f68",
-  light: "#b27b75",
-  trim: "#f1c873",
-});
-person("player-berry", "#b5628c", false, {
-  hair: "#4d3a49",
-  pants: "#5e567c",
-  light: "#907bb2",
-  trim: "#eac19a",
-});
+for (const [name, shirt, hat, overrides] of [
+  ["player", "#eee0b7", true, {}],
+  [
+    "player-sunset",
+    "#d98262",
+    true,
+    { hair: "#5a3e46", pants: "#714f68", light: "#b27b75", trim: "#f1c873" },
+  ],
+  [
+    "player-berry",
+    "#b5628c",
+    false,
+    { hair: "#4d3a49", pants: "#5e567c", light: "#907bb2", trim: "#eac19a" },
+  ],
+]) {
+  for (const [accessory, suffix] of [
+    ["none", ""],
+    ["scarf", "-scarf"],
+    ["satchel", "-satchel"],
+  ])
+    person(`${name}${suffix}`, shirt, hat, overrides, accessory);
+}
 person("farmer", "#db8961", true);
 person("mechanic", "#6d92a3", false);
 person("merchant", "#bb7891", false);

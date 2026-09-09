@@ -2,14 +2,18 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   APPEARANCES,
+  ACCESSORIES,
   ANIMAL_PRODUCTS,
   animalProductKeys,
   appearanceKeys,
+  accessoryKeys,
   buySeed,
   findPath,
   newFarm,
   plotAction,
+  playerSprite,
   restore,
+  setAccessory,
   sellAll,
   setAppearance,
   stage,
@@ -76,6 +80,20 @@ test("character appearance changes persist and old saves receive the default", (
   delete legacy.appearance;
   assert.equal(restore(JSON.stringify(legacy)).appearance, "meadow");
   assert.equal(APPEARANCES.berry.sprite, "player-berry");
+});
+test("character accessories combine with palettes and migrate old saves", () => {
+  const state = newFarm();
+  assert.deepEqual(accessoryKeys, ["none", "scarf", "satchel"]);
+  assert.equal(state.accessory, "none");
+  assert.equal(playerSprite("sunset", "scarf"), "player-sunset-scarf");
+  assert.equal(setAccessory(state, "satchel"), true);
+  assert.equal(state.accessory, "satchel");
+  assert.equal(setAccessory(state, "satchel"), false);
+  assert.equal(setAccessory(state, "unknown"), false);
+  const legacy = structuredClone(state) as { accessory?: unknown };
+  delete legacy.accessory;
+  assert.equal(restore(JSON.stringify(legacy)).accessory, "none");
+  assert.equal(ACCESSORIES.scarf.name, "Lenço");
 });
 test("locked plots do not consume seeds until the upgrade is purchased", () => {
   const state = newFarm();

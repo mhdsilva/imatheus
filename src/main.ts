@@ -31,12 +31,14 @@ import {
   buySeed,
   ANIMAL_PRODUCTS,
   APPEARANCES,
+  ACCESSORIES,
   animalProductKeys,
   CROPS,
   cropKeys,
   plotAction,
   restore,
   sellAll,
+  setAccessory,
   setAppearance,
   upgrade,
   UPGRADE_PRICE,
@@ -419,6 +421,17 @@ document.addEventListener("click", (event) => {
       open("appearance");
       notify(
         `Aparência ${APPEARANCES[state.appearance].name.toLowerCase()} escolhida.`,
+      );
+    }
+    return;
+  }
+  if (el.dataset.accessory) {
+    const key = el.dataset.accessory;
+    if (setAccessory(state, key)) {
+      updateUI();
+      open("appearance");
+      notify(
+        `Acessório ${ACCESSORIES[state.accessory].name.toLowerCase()} escolhido.`,
       );
     }
     return;

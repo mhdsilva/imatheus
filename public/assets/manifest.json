@@ -88,6 +88,32 @@
     ],
     "framesPerDirection": 4
   },
+  "player-scarf": {
+    "width": 128,
+    "height": 192,
+    "frameWidth": 32,
+    "frameHeight": 48,
+    "directions": [
+      "down",
+      "left",
+      "right",
+      "up"
+    ],
+    "framesPerDirection": 4
+  },
+  "player-satchel": {
+    "width": 128,
+    "height": 192,
+    "frameWidth": 32,
+    "frameHeight": 48,
+    "directions": [
+      "down",
+      "left",
+      "right",
+      "up"
+    ],
+    "framesPerDirection": 4
+  },
   "player-sunset": {
     "width": 128,
     "height": 192,
@@ -101,7 +127,59 @@
     ],
     "framesPerDirection": 4
   },
+  "player-sunset-scarf": {
+    "width": 128,
+    "height": 192,
+    "frameWidth": 32,
+    "frameHeight": 48,
+    "directions": [
+      "down",
+      "left",
+      "right",
+      "up"
+    ],
+    "framesPerDirection": 4
+  },
+  "player-sunset-satchel": {
+    "width": 128,
+    "height": 192,
+    "frameWidth": 32,
+    "frameHeight": 48,
+    "directions": [
+      "down",
+      "left",
+      "right",
+      "up"
+    ],
+    "framesPerDirection": 4
+  },
   "player-berry": {
+    "width": 128,
+    "height": 192,
+    "frameWidth": 32,
+    "frameHeight": 48,
+    "directions": [
+      "down",
+      "left",
+      "right",
+      "up"
+    ],
+    "framesPerDirection": 4
+  },
+  "player-berry-scarf": {
+    "width": 128,
+    "height": 192,
+    "frameWidth": 32,
+    "frameHeight": 48,
+    "directions": [
+      "down",
+      "left",
+      "right",
+      "up"
+    ],
+    "framesPerDirection": 4
+  },
+  "player-berry-satchel": {
     "width": 128,
     "height": 192,
     "frameWidth": 32,
