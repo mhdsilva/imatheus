@@ -4,6 +4,7 @@ import {
   CHAPTERS,
   DECORATIONS,
   DISCOVERIES,
+  FRIENDSHIP_SCENES,
   RESIDENTS,
   residentDialogue,
   dailyPostfair,
@@ -97,7 +98,7 @@ export function renderValleyPage(
         "Coisas pequenas, boas histórias.",
         `${s.keepsakes.length} DE ${DISCOVERIES.length} LEMBRANÇAS`,
       ) +
-      `<div class="keepsake-grid">${DISCOVERIES.map((item) => `<article class="keepsake ${s.keepsakes.includes(item.id) ? "found" : ""}"><span>${s.keepsakes.includes(item.id) ? "✧" : "?"}</span><h3>${s.keepsakes.includes(item.id) ? item.name : "Uma história por encontrar"}</h3><p>${s.keepsakes.includes(item.id) ? item.text : "Uma das descobertas espalhadas pelos dias do vale."}</p></article>`).join("")}</div><div class="friendships"><h3>Gente que já espera por você</h3>${RESIDENTS.map((npc) => `<div><span>${npc}</span><span class="friendship-hearts">${hearts(s.friendship[npc])}</span><small>${s.friendship[npc]} de amizade</small></div>`).join("")}</div>`
+      `<div class="keepsake-grid">${DISCOVERIES.map((item) => `<article class="keepsake ${s.keepsakes.includes(item.id) ? "found" : ""}"><span>${s.keepsakes.includes(item.id) ? "✧" : "?"}</span><h3>${s.keepsakes.includes(item.id) ? item.name : "Uma história por encontrar"}</h3><p>${s.keepsakes.includes(item.id) ? item.text : "Uma das descobertas espalhadas pelos dias do vale."}</p></article>`).join("")}</div><section class="friendship-memories"><h3>Memórias dos moradores</h3><div class="memory-grid">${RESIDENTS.map((npc) => { const scene = FRIENDSHIP_SCENES[npc], found = s.friendshipScenes.includes(npc); return `<article class="memory-card ${found ? "found" : ""}"><img src="${assetPath(scene.image)}" alt=""/><div><span>${found ? "GUARDADA NO DIÁRIO" : "DESBLOQUEADA COM AMIZADE"}</span><h4>${found ? scene.title : "Uma conversa especial"}</h4><p>${found ? scene.text : "Continue encontrando este morador depois da feira."}</p></div></article>`; }).join("")}</div></section><div class="friendships"><h3>Gente que já espera por você</h3>${RESIDENTS.map((npc) => `<div><span>${npc}</span><span class="friendship-hearts">${hearts(s.friendship[npc])}</span><small>${s.friendship[npc]} de amizade</small></div>`).join("")}</div>`
     );
   if (page === "decor")
     return (
@@ -185,6 +186,11 @@ export function renderResidentStory(
   const postfair = dailyPostfair(farm);
   if (s.chapter >= 7 && postfair.npc === npc)
     html += `<section class="resident-request postfair-resident"><span>ATIVIDADE DE HOJE</span><h3>${escape(postfair.title)}</h3><p>${escape(postfair.text)}</p><button class="secondary-button" data-valley="postfair" data-resident="${npc}" ${s.daily.postfairDone ? "disabled" : ""}>${s.daily.postfairDone ? "✓ Atividade concluída" : `${escape(postfair.action)} · +1 selo`}</button></section>`;
+  const scene = FRIENDSHIP_SCENES[npc];
+  if (s.chapter >= 7 && (s.friendship[npc] >= 3 || s.friendshipScenes.includes(npc))) {
+    const seen = s.friendshipScenes.includes(npc);
+    html += `<section class="resident-request friendship-scene"><span>${seen ? "MEMÓRIA GUARDADA" : "MEMÓRIA ESPECIAL"}</span><img src="${assetPath(scene.image)}" alt=""/><h3>${escape(scene.title)}</h3><p>${seen ? escape(scene.text) : "Uma lembrança espera por uma conversa com calma."}</p>${seen ? "" : `<button class="secondary-button" data-valley="friendship-scene" data-resident="${npc}">Guardar no diário · +1 selo</button>`}</section>`;
+  }
   return html;
 }
 

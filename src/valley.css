@@ -279,6 +279,61 @@
 .friendships {
   margin-top: 28px;
 }
+.friendship-memories {
+  margin-top: 30px;
+}
+.friendship-memories > h3 {
+  color: #7b826c;
+  font-size: 12px;
+}
+.memory-grid {
+  display: grid;
+  gap: 10px;
+}
+.memory-card {
+  display: flex;
+  gap: 13px;
+  align-items: center;
+  padding: 14px;
+  border: 1px dashed #d7d7c1;
+  border-radius: 10px;
+  color: #8b927e;
+}
+.memory-card.found {
+  background: #f8edcf;
+  border-style: solid;
+  color: #846848;
+}
+.memory-card img {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+.memory-card span,
+.friendship-scene > span {
+  font-size: 9px;
+  letter-spacing: 1.1px;
+  color: #8b7956;
+}
+.memory-card h4 {
+  margin: 4px 0;
+  font-size: 14px;
+  color: #4c6247;
+}
+.memory-card p {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.6;
+}
+.friendship-scene img {
+  float: right;
+  width: 58px;
+  height: 58px;
+  object-fit: contain;
+  margin: 0 0 8px 12px;
+  image-rendering: pixelated;
+}
 .friendships > div {
   display: flex;
   gap: 16px;
@@ -381,5 +436,8 @@
   }
   .animal-product-card button {
     width: 100%;
+  }
+  .memory-card {
+    align-items: flex-start;
   }
 }

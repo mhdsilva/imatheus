@@ -31,6 +31,27 @@ export const POSTFAIR_EVENTS = [
   },
 ] as const;
 export type PostfairEvent = (typeof POSTFAIR_EVENTS)[number];
+export const FRIENDSHIP_SCENES = {
+  Lia: {
+    id: "lia-seed-box",
+    title: "A caixa azul de Lia",
+    text: "Lia mostra a caixa onde guardou as últimas sementes da mãe. Ela não queria abrir sozinha; agora escolhe uma para plantar perto da janela.",
+    image: "flowerbed",
+  },
+  Bento: {
+    id: "bento-first-tool",
+    title: "A ferramenta que espera",
+    text: "Bento revela uma pequena chave que fez quando chegou ao vale. Nunca encontrou a máquina certa para ela — até perceber que algumas ferramentas também servem para começar conversas.",
+    image: "workbench",
+  },
+  Rosa: {
+    id: "rosa-first-table",
+    title: "A mesa antes da feira",
+    text: "Rosa conta que a primeira banca era só uma mesa emprestada e duas receitas. O vale cresceu porque sempre apareceu alguém para colocar mais um prato.",
+    image: "picnic",
+  },
+} as const;
+export type FriendshipScene = (typeof FRIENDSHIP_SCENES)[Resident];
 
 const ACTIVITIES: Record<Resident, readonly string[]> = {
   Lia: ["rega a horta", "observa as flores", "leva colheita à praça", "cuida dos canteiros"],

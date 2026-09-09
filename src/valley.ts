@@ -4,6 +4,7 @@ import {
   DISCOVERIES,
   DECORATIONS,
   POSTFAIR_EVENTS,
+  FRIENDSHIP_SCENES,
   dailyPostfair,
   RESIDENTS,
   type Resident,
@@ -30,6 +31,7 @@ export type ValleyState = {
   keepsakes: string[];
   decorations: Decoration[];
   activeDecorations: Decoration[];
+  friendshipScenes: Resident[];
   daily: {
     requestId: string;
     seeded: boolean;
@@ -93,6 +95,7 @@ export function newValley(
     keepsakes: [],
     decorations: [],
     activeDecorations: [],
+    friendshipScenes: [],
     daily: newDaily(day),
   };
 }
@@ -140,6 +143,11 @@ export function restoreValley(raw: unknown, now = Date.now()): ValleyState {
     const event = POSTFAIR_EVENTS.find((item) => item.id === s.daily.postfairId);
     return {
       ...s,
+      friendshipScenes: Array.isArray(s.friendshipScenes)
+        ? s.friendshipScenes.filter(
+            (npc): npc is Resident => RESIDENTS.includes(npc),
+          )
+        : [],
       daily: {
         ...s.daily,
         postfairId: event?.id ?? newDaily(s.day).postfairId,
@@ -414,6 +422,27 @@ export function completePostfair(
   farm.valley.friendship[npc]++;
   farm.coins += 15;
   return result(true, `${event.title} concluído. +1 selo e +15 moedas.`);
+}
+export function completeFriendshipScene(
+  farm: FarmState,
+  npc: Resident,
+  now = Date.now(),
+): ActionResult {
+  beginDay(farm, now);
+  if (!RESIDENTS.includes(npc))
+    return result(false, "Essa lembrança ainda não encontrou seu morador.");
+  if (farm.valley.chapter < 7)
+    return result(false, "Essa lembrança fica para depois da feira.");
+  if (farm.valley.friendship[npc] < 3)
+    return result(false, `${npc} ainda quer mais algumas conversas antes dessa lembrança.`);
+  if (farm.valley.friendshipScenes.includes(npc))
+    return result(false, "Essa lembrança já está guardada no diário.");
+  farm.valley.friendshipScenes.push(npc);
+  farm.valley.tokens++;
+  return result(
+    true,
+    `${FRIENDSHIP_SCENES[npc].title} guardada no diário. +1 selo da feira.`,
+  );
 }
 export function discover(farm: FarmState, now = Date.now()): ActionResult {
   beginDay(farm, now);

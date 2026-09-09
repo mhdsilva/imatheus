@@ -16,6 +16,7 @@ import {
   buyDecoration,
   toggleDecoration,
   completePostfair,
+  completeFriendshipScene,
 } from "./valley";
 import { RESIDENTS, type Resident, type Site } from "./valley-content";
 import {
@@ -395,6 +396,8 @@ document.addEventListener("click", (event) => {
                     ? collectAnimalProduct(state, el.dataset.animal as Animal)
                   : action === "postfair"
                     ? completePostfair(state, npc)
+                  : action === "friendship-scene"
+                    ? completeFriendshipScene(state, npc)
                   : null;
     if (result) {
       updateUI();

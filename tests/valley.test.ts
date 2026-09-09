@@ -4,6 +4,7 @@ import { newFarm, restore } from "../src/model";
 import * as valley from "../src/valley";
 import {
   dailyPostfair,
+  FRIENDSHIP_SCENES,
   residentActivity,
   residentDialogue,
 } from "../src/valley-content";
@@ -217,6 +218,21 @@ test("animal production requires daily care and is collected only once", () => {
     true,
   );
   assert.equal(farm.animalProducts.milk, 2);
+});
+
+test("friendship scenes unlock after the fair and remain one-time memories", () => {
+  const farm = farmAt();
+  assert.equal(valley.completeFriendshipScene(farm, "Lia", morning).ok, false);
+  farm.valley.chapter = 7;
+  farm.valley.friendship.Lia = 2;
+  assert.equal(valley.completeFriendshipScene(farm, "Lia", morning).ok, false);
+  farm.valley.friendship.Lia = 3;
+  const tokens = farm.valley.tokens;
+  assert.equal(valley.completeFriendshipScene(farm, "Lia", morning).ok, true);
+  assert.deepEqual(farm.valley.friendshipScenes, ["Lia"]);
+  assert.equal(farm.valley.tokens, tokens + 1);
+  assert.equal(valley.completeFriendshipScene(farm, "Lia", morning).ok, false);
+  assert.equal(FRIENDSHIP_SCENES.Lia.image, "flowerbed");
 });
 
 test("decorations use earned stamps and can be toggled without being purchased twice", () => {

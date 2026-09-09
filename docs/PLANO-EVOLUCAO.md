@@ -120,7 +120,7 @@ Prioridade: depois de consolidar a apresentação profissional.
 - Variar falas pelo capítulo e pelo que já aconteceu; evitar anunciar acontecimentos que ainda não foram liberados.
 - Pausar a atividade durante uma conversa e retomá-la ao terminar, com tratamento de caminhos bloqueados.
 
-Status em 8 de setembro de 2026: as rotinas agora mostram atividades textuais no mundo e cada morador alterna diálogo contextual após a primeira conversa diária. Quadros de animação de trabalho e cenas de amizade continuam como evolução futura.
+Status em 9 de setembro de 2026: as rotinas mostram atividades textuais no mundo, cada morador alterna diálogo contextual após a primeira conversa diária e, depois da feira, cada amizade com 3 pontos desbloqueia uma memória opcional registrada no diário. Quadros de animação de trabalho e uma cadeia maior de cenas continuam como evolução futura.
 
 ### Critérios de conclusão
 
@@ -226,7 +226,7 @@ Antes de executar cada etapa, escrever um plano técnico limitado a ela, com int
 - [x] Revisar este roteiro e confirmar o escopo da etapa 1.
 - [x] Detalhar tecnicamente e implementar o passeio profissional opcional.
 - [ ] Preparar os dois primeiros cases públicos e validar seu conteúdo com Matheus.
-- [ ] Evoluir atividades e pequenas histórias dos três moradores.
+- [x] Evoluir atividades e pequenas histórias dos três moradores.
 - [x] Criar o primeiro conjunto de acontecimentos pós-feira e testar visitas curtas.
 - [ ] Reavaliar a prioridade entre personalização e produção animal com base nas partidas.
 

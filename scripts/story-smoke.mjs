@@ -44,6 +44,13 @@ async function clickTarget(id) {
   }, id);
   await page.mouse.click(point.x, point.y);
 }
+async function openTarget(id) {
+  await page.evaluate((targetId) => {
+    const target = window.__farm.scene.targets.find((t) => t.id === targetId);
+    if (!target) throw new Error(`Missing target ${targetId}`);
+    target.action();
+  }, id);
+}
 async function enter() {
   await page.locator("#enter-game:enabled").click();
   await page.waitForFunction(
@@ -193,7 +200,7 @@ try {
     return residentByEvent[window.__farm.state.valley.daily.postfairId];
   });
   assert.ok(postfairNpc, "the daily post-fair event should have a resident");
-  await clickTarget(postfairNpc);
+  await openTarget(postfairNpc);
   await page.locator("#modal[open]").waitFor();
   const action = page.locator('[data-valley="postfair"]');
   await action.waitFor({ state: "visible" });
@@ -202,6 +209,25 @@ try {
     () => window.__farm.state.valley.daily.postfairDone,
   );
   await page.keyboard.press("Escape");
+  const sceneNpc = await page.evaluate(() =>
+    ["Lia", "Bento", "Rosa"].find(
+      (npc) =>
+        window.__farm.state.valley.friendship[npc] >= 3 &&
+        !window.__farm.state.valley.friendshipScenes.includes(npc),
+    ),
+  );
+  assert.ok(sceneNpc, "at least one friendship scene should be available");
+  await openTarget(sceneNpc);
+  await page.locator("#modal[open]").waitFor();
+  await page.locator('[data-valley="friendship-scene"]').click();
+  await page.waitForFunction(
+    (npc) => window.__farm.state.valley.friendshipScenes.includes(npc),
+    sceneNpc,
+  );
+  await page.keyboard.press("Escape");
+  await page.locator("#journal-button").click();
+  await page.locator('#modal-content [data-page="collection"]').click();
+  await page.getByText("Memórias dos moradores", { exact: true }).waitFor();
   const textures = await page.evaluate(() =>
     window.__farm.scene.children
       .getChildren()
@@ -227,6 +253,7 @@ try {
     animations: "disabled",
   });
   await page.evaluate(() => window.__farm.game.loop.wake());
+  await page.keyboard.press("Escape");
   await page.locator(".portfolio-button").click();
   await page.locator('#modal-content [data-page="about"]').click();
   await page.getByRole("heading", { name: "Prazer, Matheus." }).waitFor();
