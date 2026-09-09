@@ -1,6 +1,6 @@
 # Próximos passos do portfólio
 
-Data: 8 de setembro de 2026.
+Data: 9 de setembro de 2026.
 
 Status: proposta para revisão. Este documento autoriza somente planejamento; nenhuma etapa abaixo foi iniciada por sua criação. A ordem é recomendada, e funcionalidades novas dependem da revisão do Matheus antes da implementação.
 
@@ -10,11 +10,11 @@ O visitante deve sair sabendo quem é Matheus, que problemas ele sabe resolver e
 
 Planejar três ritmos de visita:
 
-| Visita | Experiência pretendida | Sinal de sucesso |
-| --- | --- | --- |
-| Direta, 1–2 minutos | Ler o currículo e localizar experiências, projetos e contato | A pessoa encontra as informações sem entrar no jogo |
-| Exploração inicial, cerca de 10 minutos | Conhecer Matheus enquanto conversa, explora e experimenta a fazenda | A pessoa entende que está em um portfólio e consegue citar um trabalho ou competência concreta |
-| Retorno, cerca de 5 minutos | Encontrar uma novidade, realizar uma atividade e perceber uma mudança | A sessão tem um pequeno desfecho satisfatório e pode terminar sem obrigação de continuar |
+| Visita                                  | Experiência pretendida                                                | Sinal de sucesso                                                                               |
+| --------------------------------------- | --------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| Direta, 1–2 minutos                     | Ler o currículo e localizar experiências, projetos e contato          | A pessoa encontra as informações sem entrar no jogo                                            |
+| Exploração inicial, cerca de 10 minutos | Conhecer Matheus enquanto conversa, explora e experimenta a fazenda   | A pessoa entende que está em um portfólio e consegue citar um trabalho ou competência concreta |
+| Retorno, cerca de 5 minutos             | Encontrar uma novidade, realizar uma atividade e perceber uma mudança | A sessão tem um pequeno desfecho satisfatório e pode terminar sem obrigação de continuar       |
 
 Os tempos são metas de experiência a validar em partidas, não limites impostos ao visitante.
 
@@ -50,11 +50,11 @@ As principais oportunidades estão na profundidade dos projetos apresentados, na
 
 ## 4. Alternativas de evolução
 
-| Abordagem | Ganho principal | Custo ou limitação |
-| --- | --- | --- |
-| Portfólio e jogo em etapas conectadas — recomendada | Melhora a apresentação profissional e cria retornos com conteúdo e personalidade | Exige manter o foco de cada entrega |
-| Expandir primeiro a simulação rural | Mais atividades, itens e progressão | Pode aumentar bastante o jogo sem melhorar o entendimento sobre Matheus |
-| Priorizar apenas conteúdo profissional | Cases e currículo ficam mais fortes rapidamente | O retorno diário e a vida da fazenda evoluem pouco |
+| Abordagem                                           | Ganho principal                                                                  | Custo ou limitação                                                      |
+| --------------------------------------------------- | -------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| Portfólio e jogo em etapas conectadas — recomendada | Melhora a apresentação profissional e cria retornos com conteúdo e personalidade | Exige manter o foco de cada entrega                                     |
+| Expandir primeiro a simulação rural                 | Mais atividades, itens e progressão                                              | Pode aumentar bastante o jogo sem melhorar o entendimento sobre Matheus |
+| Priorizar apenas conteúdo profissional              | Cases e currículo ficam mais fortes rapidamente                                  | O retorno diário e a vida da fazenda evoluem pouco                      |
 
 A proposta segue a primeira abordagem. Cada etapa precisa resultar em uma melhoria perceptível, utilizável e verificável por si só.
 
@@ -177,9 +177,9 @@ Conclusão: trocar a aparência e a decoração funciona durante caminhada, diá
 - Rebalancear pedidos e preços para a produção animal complementar o cultivo.
 - Não adicionar fome, doença ou punição aos animais por ausência.
 
-Status em 9 de setembro de 2026: a primeira entrega está implementada. Cuidar de uma vaca ou das galinhas libera uma coleta diária de leite ou ovos; os produtos aparecem na mochila e entram na venda da Rosa, com migração segura de saves antigos. Entrega em pedidos, variação de quantidades e melhorias no celeiro continuam como evolução futura.
+Status em 9 de setembro de 2026: a primeira entrega está implementada. Cuidar de uma vaca ou das galinhas libera uma coleta diária de leite ou ovos; os produtos aparecem na mochila, entram na venda da Rosa e podem atender encomendas diárias específicas, com migração segura de saves antigos. Os pedidos de produto não entregam sementes, pagam uma vez por data e exigem o morador correto. Variação de quantidades e melhorias no celeiro continuam como evolução futura.
 
-Conclusão: produção e coleta têm regras explícitas, não duplicam ao recarregar e entram na economia sem tornar culturas e pedidos anteriores irrelevantes.
+Conclusão: produção, coleta e entrega têm regras explícitas, não duplicam ao recarregar e entram na economia sem tornar culturas e pedidos anteriores irrelevantes.
 
 Trator dirigível, receitas e automação ficam fora dessas duas entregas; cada um precisa justificar seu próprio ciclo de jogo antes de entrar no escopo.
 
@@ -200,14 +200,14 @@ Não há meta de desempenho medida neste documento. Registrar equipamento, naveg
 
 Manter TypeScript, Phaser, Vite, a geração de PNGs e a separação de dados profissionais já existente. Não iniciar uma reescrita geral.
 
-| Frente | Pontos atuais a considerar no plano técnico futuro |
-| --- | --- |
+| Frente               | Pontos atuais a considerar no plano técnico futuro                                                       |
+| -------------------- | -------------------------------------------------------------------------------------------------------- |
 | Passeio e orientação | `src/main.ts`, `src/game.ts`, `index.html`, `src/intro.css`; isolar estado do passeio se o fluxo crescer |
-| Cases e conteúdo | `src/portfolio.ts`, `src/portfolio-view.ts`, `src/resume-view.ts` e estilos correspondentes |
-| NPCs e animações | `src/game.ts`, `scripts/generate-assets.mjs` e conteúdo narrativo |
-| Pós-feira | `src/valley.ts`, `src/valley-content.ts`, `src/valley-view.ts`, `src/valley-world.ts` |
-| Aparência e produção | Gerador de assets, apresentação do personagem, `src/model.ts` e validação do save |
-| Verificação | `tests/` e scripts de navegador existentes, ampliados conforme o fluxo alterado |
+| Cases e conteúdo     | `src/portfolio.ts`, `src/portfolio-view.ts`, `src/resume-view.ts` e estilos correspondentes              |
+| NPCs e animações     | `src/game.ts`, `scripts/generate-assets.mjs` e conteúdo narrativo                                        |
+| Pós-feira            | `src/valley.ts`, `src/valley-content.ts`, `src/valley-view.ts`, `src/valley-world.ts`                    |
+| Aparência e produção | Gerador de assets, apresentação do personagem, `src/model.ts` e validação do save                        |
+| Verificação          | `tests/` e scripts de navegador existentes, ampliados conforme o fluxo alterado                          |
 
 Antes de executar cada etapa, escrever um plano técnico limitado a ela, com interfaces, arquivos, regras de persistência e cenários de teste. Separar responsabilidades quando necessário à entrega, sem refatorações paralelas de todo o projeto.
 

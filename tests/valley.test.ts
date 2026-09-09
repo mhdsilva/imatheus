@@ -143,8 +143,10 @@ test("reading a letter and opening the daily request cannot duplicate seed gifts
 
 test("daily orders require the right resident and pay once per date", () => {
   const farm = farmAt();
+  farm.valley.daily.requestId = "lia-carrots";
   valley.beginDay(farm, morning);
   const order = valley.dailyRequest(farm);
+  if (order.kind !== "crop") throw new Error("expected crop request");
   farm.produce[order.crop] = 1;
   assert.equal(valley.deliverRequest(farm, order.npc, morning).ok, false);
   assert.equal(farm.produce[order.crop], 1);
@@ -192,7 +194,10 @@ test("post-fair activity rewards one short visit and resets on a new date", () =
   const event = dailyPostfair(farm);
   const coins = farm.coins;
   const tokens = farm.valley.tokens;
-  assert.equal(valley.completePostfair(farm, "Lia", morning).ok, event.npc === "Lia");
+  assert.equal(
+    valley.completePostfair(farm, "Lia", morning).ok,
+    event.npc === "Lia",
+  );
   if (event.npc !== "Lia") {
     assert.equal(valley.completePostfair(farm, event.npc, morning).ok, true);
   }
@@ -233,6 +238,24 @@ test("friendship scenes unlock after the fair and remain one-time memories", () 
   assert.equal(farm.valley.tokens, tokens + 1);
   assert.equal(valley.completeFriendshipScene(farm, "Lia", morning).ok, false);
   assert.equal(FRIENDSHIP_SCENES.Lia.image, "flowerbed");
+});
+
+test("animal daily orders require collected products and pay once", () => {
+  const farm = farmAt();
+  farm.valley.daily.requestId = "lia-milk";
+  const order = valley.dailyRequest(farm);
+  assert.equal(order.kind, "animal");
+  const seeds = structuredClone(farm.seeds);
+  valley.beginDay(farm, morning);
+  assert.deepEqual(farm.seeds, seeds);
+  assert.equal(valley.deliverRequest(farm, "Lia", morning).ok, false);
+  farm.animalProducts.milk = 1;
+  const coins = farm.coins;
+  assert.equal(valley.deliverRequest(farm, "Bento", morning).ok, false);
+  assert.equal(valley.deliverRequest(farm, "Lia", morning).ok, true);
+  assert.equal(farm.animalProducts.milk, 0);
+  assert.equal(farm.coins, coins + 30);
+  assert.equal(valley.deliverRequest(farm, "Lia", morning).ok, false);
 });
 
 test("decorations use earned stamps and can be toggled without being purchased twice", () => {

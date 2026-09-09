@@ -68,9 +68,7 @@ try {
   await page.locator('#portfolio-tour [data-tour="resume"]').click();
   assert.equal(await page.evaluate(() => window.__farm.state.tour.current), 1);
   await page.locator('#portfolio-tour [data-tour="open-current"]').click();
-  await page
-    .getByRole("heading", { name: "A oficina de ideias." })
-    .waitFor();
+  await page.getByRole("heading", { name: "A oficina de ideias." }).waitFor();
   await page.keyboard.press("Escape");
   await page.waitForFunction(() => window.__farm.state.tour.current === 2);
   await page.locator('#portfolio-tour [data-tour="open-current"]').click();
@@ -228,9 +226,7 @@ try {
     window.__farm.state.valley.daily.cared.includes("cow"),
   );
   await openTarget("barn");
-  await page
-    .locator('[data-valley="collect-animal"]:not([disabled])')
-    .click();
+  await page.locator('[data-valley="collect-animal"]:not([disabled])').click();
   await page.waitForFunction(
     () => window.__farm.state.animalProducts.milk === 1,
   );
@@ -238,8 +234,47 @@ try {
   await openTarget("market");
   await page.getByRole("heading", { name: "Mercado da Rosa" }).waitFor();
   await page.locator("#sell").click();
-  await page.waitForFunction(() => window.__farm.state.animalProducts.milk === 0);
+  await page.waitForFunction(
+    () => window.__farm.state.animalProducts.milk === 0,
+  );
   console.log("Animal care, collection and sale verified.");
+  await page.keyboard.press("Escape");
+  await page.addInitScript(() => {
+    if (sessionStorage.getItem("animal-order-smoke-patched")) return;
+    const key = "vale-do-matheus:v1";
+    const raw = localStorage.getItem(key);
+    if (!raw) return;
+    const farm = JSON.parse(raw);
+    const parts = new Intl.DateTimeFormat("en-CA", {
+      timeZone: farm.valley.timezone,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).formatToParts(new Date());
+    farm.valley.day = ["year", "month", "day"]
+      .map((type) => parts.find((part) => part.type === type)?.value)
+      .join("-");
+    farm.valley.daily.requestId = "lia-milk";
+    farm.valley.daily.seeded = true;
+    farm.valley.daily.delivered = false;
+    farm.animalProducts.milk = 1;
+    localStorage.setItem(key, JSON.stringify(farm));
+    sessionStorage.setItem("animal-order-smoke-patched", "1");
+  });
+  await page.reload({ waitUntil: "networkidle" });
+  await page.locator("#enter-game:enabled").click();
+  await page.locator("#journal-button").click();
+  await page.locator('#modal-content [data-page="request"]').click();
+  await page.getByText("1 leite", { exact: true }).waitFor();
+  await page.keyboard.press("Escape");
+  await openTarget("Lia");
+  await page.locator('[data-valley="request"]').click();
+  await page.waitForFunction(() => window.__farm.state.valley.daily.delivered);
+  assert.equal(
+    await page.evaluate(() => window.__farm.state.animalProducts.milk),
+    0,
+  );
+  console.log("Animal product daily order and delivery verified.");
   await page.keyboard.press("Escape");
   const npcBefore = await page.evaluate(() =>
     window.__farm.scene.actors.map((a) => ({ x: a.sprite.x, y: a.sprite.y })),

@@ -140,22 +140,27 @@ export function restoreValley(raw: unknown, now = Date.now()): ValleyState {
       !strings(s.daily.cared)
     )
       return newValley(now);
-    const event = POSTFAIR_EVENTS.find((item) => item.id === s.daily.postfairId);
+    const event = POSTFAIR_EVENTS.find(
+      (item) => item.id === s.daily.postfairId,
+    );
     return {
       ...s,
       friendshipScenes: Array.isArray(s.friendshipScenes)
-        ? s.friendshipScenes.filter(
-            (npc): npc is Resident => RESIDENTS.includes(npc),
+        ? s.friendshipScenes.filter((npc): npc is Resident =>
+            RESIDENTS.includes(npc),
           )
         : [],
       daily: {
         ...s.daily,
         postfairId: event?.id ?? newDaily(s.day).postfairId,
         postfairDone:
-          typeof s.daily.postfairDone === "boolean" ? s.daily.postfairDone : false,
+          typeof s.daily.postfairDone === "boolean"
+            ? s.daily.postfairDone
+            : false,
         animalCollected: Array.isArray(s.daily.animalCollected)
           ? s.daily.animalCollected.filter(
-              (animal): animal is Animal => animal === "cow" || animal === "chicken",
+              (animal): animal is Animal =>
+                animal === "cow" || animal === "chicken",
             )
           : [],
       },
@@ -194,7 +199,7 @@ export function beginDay(farm: FarmState, now = Date.now()): boolean {
   }
   if (!s.daily.seeded) {
     const order = dailyRequest(farm);
-    farm.seeds[order.crop] += order.count;
+    if (order.kind === "crop") farm.seeds[order.crop] += order.count;
     s.daily.seeded = true;
   }
   return changed;
@@ -385,16 +390,17 @@ export function deliverRequest(
   beginDay(farm, now);
   const order = dailyRequest(farm),
     s = farm.valley;
-  if (
-    s.daily.delivered ||
-    order.npc !== npc ||
-    farm.produce[order.crop] < order.count
-  )
+  const available =
+    order.kind === "crop"
+      ? farm.produce[order.crop]
+      : farm.animalProducts[order.product];
+  if (s.daily.delivered || order.npc !== npc || available < order.count)
     return result(
       false,
       "Confira os produtos e entregue ao morador que fez o pedido.",
     );
-  farm.produce[order.crop] -= order.count;
+  if (order.kind === "crop") farm.produce[order.crop] -= order.count;
+  else farm.animalProducts[order.product] -= order.count;
   farm.coins += 30;
   s.tokens++;
   s.friendship[npc]++;
@@ -434,7 +440,10 @@ export function completeFriendshipScene(
   if (farm.valley.chapter < 7)
     return result(false, "Essa lembrança fica para depois da feira.");
   if (farm.valley.friendship[npc] < 3)
-    return result(false, `${npc} ainda quer mais algumas conversas antes dessa lembrança.`);
+    return result(
+      false,
+      `${npc} ainda quer mais algumas conversas antes dessa lembrança.`,
+    );
   if (farm.valley.friendshipScenes.includes(npc))
     return result(false, "Essa lembrança já está guardada no diário.");
   farm.valley.friendshipScenes.push(npc);

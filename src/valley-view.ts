@@ -1,5 +1,5 @@
 import { assetPath } from "./assets";
-import { CROPS, type FarmState } from "./model";
+import { ANIMAL_PRODUCTS, CROPS, type FarmState } from "./model";
 import {
   CHAPTERS,
   DECORATIONS,
@@ -30,6 +30,30 @@ const hearts = (points: number) =>
   "♡".repeat(5 - Math.min(5, Math.ceil(points / 3)));
 const title = (text: string, caption: string) =>
   `<div class="diary-heading"><span>${caption}</span><h2 id="modal-title">${text}</h2></div>`;
+function requestDetails(farm: FarmState) {
+  const order = dailyRequest(farm);
+  if (order.kind === "crop")
+    return {
+      order,
+      image: order.crop,
+      name: CROPS[order.crop].plural,
+      amount: farm.produce[order.crop],
+      inventory: `${farm.produce[order.crop]} na mochila · ${farm.seeds[order.crop]} sementes`,
+      preparation: "As sementes deste pedido já estão na mochila.",
+    };
+  const product = ANIMAL_PRODUCTS[order.product];
+  return {
+    order,
+    image: product.image,
+    name: product.plural,
+    amount: farm.animalProducts[order.product],
+    inventory: `${farm.animalProducts[order.product]} disponíveis na mochila`,
+    preparation:
+      product.animal === "cow"
+        ? "Cuide da vaquinha e recolha o leite antes de entregar."
+        : "Cuide das galinhas e recolha os ovos antes de entregar.",
+  };
+}
 function goals(farm: FarmState, now: number) {
   return `<ul class="story-goals">${chapterStatus(farm, now)
     .tasks.map(
@@ -84,11 +108,12 @@ export function renderValleyPage(
     return navigation() + body + history(farm);
   }
   if (page === "request") {
-    const order = dailyRequest(farm);
+    const details = requestDetails(farm),
+      order = details.order;
     return (
       navigation() +
       title("Uma gentileza por dia.", "ENCOMENDA DO DIA") +
-      `<div class="request-note"><span>DE ${order.npc.toUpperCase()}</span><p>“${escape(order.text)}”</p></div><div class="request-product"><img src="${assetPath(order.crop)}" alt=""/><div><strong>${order.count} ${CROPS[order.crop].plural}</strong><small>${farm.produce[order.crop]} na mochila · ${farm.seeds[order.crop]} sementes</small></div><b>${s.daily.delivered ? "✓" : "↗"}</b></div><p class="delivery-hint">${s.daily.delivered ? "Entregue, com carinho. Outro pedido chega em um novo dia." : `Leve a colheita até ${order.npc}. As sementes deste pedido já estão na mochila.`}</p><div class="reward-line">✧ 1 selo da feira <span>● 30 moedas</span><span>♡ Amizade</span></div><div class="content-card"><h3>Um cantinho para descobrir</h3><p>${s.daily.discovered ? `Você encontrou ${dailyDiscovery(farm).name.toLowerCase()}. A lembrança ficou no diário.` : "Há um pequeno pacote perdido em algum lugar do gramado. Passeie pelo vale e clique nele para guardar a descoberta de hoje."}</p></div><p class="daily-note">Os pedidos mudam por data no seu fuso. Se perder um dia, a fazenda e sua história continuam esperando.</p>`
+      `<div class="request-note"><span>DE ${order.npc.toUpperCase()}</span><p>“${escape(order.text)}”</p></div><div class="request-product"><img src="${assetPath(details.image)}" alt=""/><div><strong>${order.count} ${details.name}</strong><small>${details.inventory}</small></div><b>${s.daily.delivered ? "✓" : "↗"}</b></div><p class="delivery-hint">${s.daily.delivered ? "Entregue, com carinho. Outro pedido chega em um novo dia." : `Leve ${details.name} até ${order.npc}. ${details.preparation}`}</p><div class="reward-line">✧ 1 selo da feira <span>● 30 moedas</span><span>♡ Amizade</span></div><div class="content-card"><h3>Um cantinho para descobrir</h3><p>${s.daily.discovered ? `Você encontrou ${dailyDiscovery(farm).name.toLowerCase()}. A lembrança ficou no diário.` : "Há um pequeno pacote perdido em algum lugar do gramado. Passeie pelo vale e clique nele para guardar a descoberta de hoje."}</p></div><p class="daily-note">Os pedidos mudam por data no seu fuso. Se perder um dia, a fazenda e sua história continuam esperando.</p>`
     );
   }
   if (page === "collection")
@@ -98,7 +123,15 @@ export function renderValleyPage(
         "Coisas pequenas, boas histórias.",
         `${s.keepsakes.length} DE ${DISCOVERIES.length} LEMBRANÇAS`,
       ) +
-      `<div class="keepsake-grid">${DISCOVERIES.map((item) => `<article class="keepsake ${s.keepsakes.includes(item.id) ? "found" : ""}"><span>${s.keepsakes.includes(item.id) ? "✧" : "?"}</span><h3>${s.keepsakes.includes(item.id) ? item.name : "Uma história por encontrar"}</h3><p>${s.keepsakes.includes(item.id) ? item.text : "Uma das descobertas espalhadas pelos dias do vale."}</p></article>`).join("")}</div><section class="friendship-memories"><h3>Memórias dos moradores</h3><div class="memory-grid">${RESIDENTS.map((npc) => { const scene = FRIENDSHIP_SCENES[npc], found = s.friendshipScenes.includes(npc); return `<article class="memory-card ${found ? "found" : ""}"><img src="${assetPath(scene.image)}" alt=""/><div><span>${found ? "GUARDADA NO DIÁRIO" : "DESBLOQUEADA COM AMIZADE"}</span><h4>${found ? scene.title : "Uma conversa especial"}</h4><p>${found ? scene.text : "Continue encontrando este morador depois da feira."}</p></div></article>`; }).join("")}</div></section><div class="friendships"><h3>Gente que já espera por você</h3>${RESIDENTS.map((npc) => `<div><span>${npc}</span><span class="friendship-hearts">${hearts(s.friendship[npc])}</span><small>${s.friendship[npc]} de amizade</small></div>`).join("")}</div>`
+      `<div class="keepsake-grid">${DISCOVERIES.map((item) => `<article class="keepsake ${s.keepsakes.includes(item.id) ? "found" : ""}"><span>${s.keepsakes.includes(item.id) ? "✧" : "?"}</span><h3>${s.keepsakes.includes(item.id) ? item.name : "Uma história por encontrar"}</h3><p>${s.keepsakes.includes(item.id) ? item.text : "Uma das descobertas espalhadas pelos dias do vale."}</p></article>`).join("")}</div><section class="friendship-memories"><h3>Memórias dos moradores</h3><div class="memory-grid">${RESIDENTS.map(
+        (npc) => {
+          const scene = FRIENDSHIP_SCENES[npc],
+            found = s.friendshipScenes.includes(npc);
+          return `<article class="memory-card ${found ? "found" : ""}"><img src="${assetPath(scene.image)}" alt=""/><div><span>${found ? "GUARDADA NO DIÁRIO" : "DESBLOQUEADA COM AMIZADE"}</span><h4>${found ? scene.title : "Uma conversa especial"}</h4><p>${found ? scene.text : "Continue encontrando este morador depois da feira."}</p></div></article>`;
+        },
+      ).join(
+        "",
+      )}</div></section><div class="friendships"><h3>Gente que já espera por você</h3>${RESIDENTS.map((npc) => `<div><span>${npc}</span><span class="friendship-hearts">${hearts(s.friendship[npc])}</span><small>${s.friendship[npc]} de amizade</small></div>`).join("")}</div>`
     );
   if (page === "decor")
     return (
@@ -172,7 +205,8 @@ export function renderResidentStory(
 ) {
   const status = chapterStatus(farm, now),
     s = farm.valley;
-  const order = dailyRequest(farm);
+  const details = requestDetails(farm),
+    order = details.order;
   const story = residentDialogue(farm, npc, now);
   let html = `<p class="dialogue-copy">${escape(story)}</p><div class="resident-friendship">♡ ${s.friendship[npc]} de amizade · ${s.daily.chatted.includes(npc) ? "bom te ver hoje" : "cada conversa aproxima"}</div>`;
   if (
@@ -182,12 +216,15 @@ export function renderResidentStory(
   )
     html += `<section class="resident-request"><h3>${status.chapter.title}</h3>${goals(farm, now)}<button class="primary-button" data-valley="chapter" data-resident="${npc}" ${status.ready ? "" : "disabled"}>Entregar e continuar a história →</button></section>`;
   if (order.npc === npc)
-    html += `<section class="resident-request daily-resident"><span>PEDIDO DE HOJE</span><p>${escape(order.text)}</p><button class="secondary-button" data-valley="request" data-resident="${npc}" ${s.daily.delivered || farm.produce[order.crop] < order.count ? "disabled" : ""}>${s.daily.delivered ? "✓ Encomenda recebida" : `Entregar ${order.count} ${CROPS[order.crop].plural} · +1 selo`}</button></section>`;
+    html += `<section class="resident-request daily-resident"><span>PEDIDO DE HOJE</span><p>${escape(order.text)}</p><button class="secondary-button" data-valley="request" data-resident="${npc}" ${s.daily.delivered || details.amount < order.count ? "disabled" : ""}>${s.daily.delivered ? "✓ Encomenda recebida" : `Entregar ${order.count} ${details.name} · +1 selo`}</button></section>`;
   const postfair = dailyPostfair(farm);
   if (s.chapter >= 7 && postfair.npc === npc)
     html += `<section class="resident-request postfair-resident"><span>ATIVIDADE DE HOJE</span><h3>${escape(postfair.title)}</h3><p>${escape(postfair.text)}</p><button class="secondary-button" data-valley="postfair" data-resident="${npc}" ${s.daily.postfairDone ? "disabled" : ""}>${s.daily.postfairDone ? "✓ Atividade concluída" : `${escape(postfair.action)} · +1 selo`}</button></section>`;
   const scene = FRIENDSHIP_SCENES[npc];
-  if (s.chapter >= 7 && (s.friendship[npc] >= 3 || s.friendshipScenes.includes(npc))) {
+  if (
+    s.chapter >= 7 &&
+    (s.friendship[npc] >= 3 || s.friendshipScenes.includes(npc))
+  ) {
     const seen = s.friendshipScenes.includes(npc);
     html += `<section class="resident-request friendship-scene"><span>${seen ? "MEMÓRIA GUARDADA" : "MEMÓRIA ESPECIAL"}</span><img src="${assetPath(scene.image)}" alt=""/><h3>${escape(scene.title)}</h3><p>${seen ? escape(scene.text) : "Uma lembrança espera por uma conversa com calma."}</p>${seen ? "" : `<button class="secondary-button" data-valley="friendship-scene" data-resident="${npc}">Guardar no diário · +1 selo</button>`}</section>`;
   }

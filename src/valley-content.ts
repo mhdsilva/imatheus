@@ -1,5 +1,4 @@
-import type { Crop } from "./model";
-import type { FarmState } from "./model";
+import type { AnimalProduct, Crop, FarmState } from "./model";
 
 export const RESIDENTS = ["Lia", "Bento", "Rosa"] as const;
 export type Resident = (typeof RESIDENTS)[number];
@@ -54,8 +53,18 @@ export const FRIENDSHIP_SCENES = {
 export type FriendshipScene = (typeof FRIENDSHIP_SCENES)[Resident];
 
 const ACTIVITIES: Record<Resident, readonly string[]> = {
-  Lia: ["rega a horta", "observa as flores", "leva colheita à praça", "cuida dos canteiros"],
-  Bento: ["confere as ferramentas", "ajusta o trator", "testa uma peça", "faz uma pausa"],
+  Lia: [
+    "rega a horta",
+    "observa as flores",
+    "leva colheita à praça",
+    "cuida dos canteiros",
+  ],
+  Bento: [
+    "confere as ferramentas",
+    "ajusta o trator",
+    "testa uma peça",
+    "faz uma pausa",
+  ],
   Rosa: ["separa os produtos", "confere as receitas", "organiza a banca"],
 };
 const AMBIENT_DIALOGUE: Record<Resident, readonly string[]> = {
@@ -78,16 +87,20 @@ export function residentActivity(npc: Resident, goal: number) {
   return activities[goal % activities.length];
 }
 
-export function residentDialogue(farm: FarmState, npc: Resident, now = Date.now()) {
+export function residentDialogue(
+  farm: FarmState,
+  npc: Resident,
+  now = Date.now(),
+) {
   const s = farm.valley;
   if (s.chapter >= 7)
     return {
       Lia: "A feira está viva outra vez. Às vezes, tudo o que a gente precisa é de alguém que volte para conversar.",
-      Bento: "O moinho está funcionando e já tenho novas ideias. Mas hoje também cabe uma pausa na feira.",
+      Bento:
+        "O moinho está funcionando e já tenho novas ideias. Mas hoje também cabe uma pausa na feira.",
       Rosa: "Sempre tem uma encomenda nova por aqui. E a mesa da feira continua com um lugar para você.",
     }[npc];
-  if (!s.daily.chatted.includes(npc))
-    return CHAPTERS[s.chapter].dialogue[npc];
+  if (!s.daily.chatted.includes(npc)) return CHAPTERS[s.chapter].dialogue[npc];
   const daySeed = new Date(now).getUTCDate();
   return AMBIENT_DIALOGUE[npc][daySeed % AMBIENT_DIALOGUE[npc].length];
 }
@@ -95,8 +108,7 @@ export function residentDialogue(farm: FarmState, npc: Resident, now = Date.now(
 export function dailyPostfair(farm: FarmState): PostfairEvent {
   const day = Math.floor(Date.parse(`${farm.valley.day}T12:00:00Z`) / 86400000);
   const index =
-    ((day % POSTFAIR_EVENTS.length) +
-      POSTFAIR_EVENTS.length) %
+    ((day % POSTFAIR_EVENTS.length) + POSTFAIR_EVENTS.length) %
     POSTFAIR_EVENTS.length;
   return POSTFAIR_EVENTS[index];
 }
@@ -297,15 +309,27 @@ export const CHAPTERS: Chapter[] = [
   },
 ];
 
-export const REQUESTS: {
-  id: string;
-  npc: Resident;
-  crop: Crop;
-  count: number;
-  text: string;
-}[] = [
+export type DailyRequest =
+  | {
+      id: string;
+      kind: "crop";
+      npc: Resident;
+      crop: Crop;
+      count: number;
+      text: string;
+    }
+  | {
+      id: string;
+      kind: "animal";
+      npc: Resident;
+      product: AnimalProduct;
+      count: number;
+      text: string;
+    };
+export const REQUESTS: DailyRequest[] = [
   {
     id: "lia-carrots",
+    kind: "crop",
     npc: "Lia",
     crop: "carrot",
     count: 2,
@@ -313,6 +337,7 @@ export const REQUESTS: {
   },
   {
     id: "rosa-turnips",
+    kind: "crop",
     npc: "Rosa",
     crop: "turnip",
     count: 2,
@@ -320,6 +345,7 @@ export const REQUESTS: {
   },
   {
     id: "bento-corn",
+    kind: "crop",
     npc: "Bento",
     crop: "corn",
     count: 2,
@@ -327,6 +353,7 @@ export const REQUESTS: {
   },
   {
     id: "rosa-carrots",
+    kind: "crop",
     npc: "Rosa",
     crop: "carrot",
     count: 2,
@@ -334,6 +361,7 @@ export const REQUESTS: {
   },
   {
     id: "bento-turnips",
+    kind: "crop",
     npc: "Bento",
     crop: "turnip",
     count: 2,
@@ -341,10 +369,27 @@ export const REQUESTS: {
   },
   {
     id: "lia-corn",
+    kind: "crop",
     npc: "Lia",
     crop: "corn",
     count: 2,
     text: "Quero guardar milho para a mesa compartilhada. Você pode trazer dois?",
+  },
+  {
+    id: "lia-milk",
+    kind: "animal",
+    npc: "Lia",
+    product: "milk",
+    count: 1,
+    text: "Vou levar leite fresco para a casa. Você consegue guardar um pouco para mim?",
+  },
+  {
+    id: "rosa-eggs",
+    kind: "animal",
+    npc: "Rosa",
+    product: "egg",
+    count: 2,
+    text: "A banca está pedindo ovos para a receita de hoje. Pode trazer dois?",
   },
 ];
 export const DISCOVERIES = [

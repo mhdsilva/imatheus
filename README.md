@@ -40,20 +40,20 @@ O desenvolvimento usa polling de um segundo em `vite.config.ts`, evitando o erro
 - Compre a expansão de 240 moedas para liberar mais seis canteiros.
 - Abra o **Diário** ou clique no correio para começar **Cartas do Vale**: uma história de sete capítulos sobre recuperar a antiga feira, descobrir quem escreveu uma carta e aproximar os moradores.
 - Guarde a carta para receber sementes. Converse, cultive, cuide dos animais e visite os locais indicados; entregue os produtos ao morador para concluir o capítulo.
-- A cada nova data há uma encomenda e um pacote escondido no gramado. As sementes da encomenda entram automaticamente na mochila. Entregue a colheita ao morador indicado.
+- A cada nova data há uma encomenda e um pacote escondido no gramado. Pedidos de cultivo entregam sementes automaticamente; pedidos de produto animal pedem leite ou ovos recolhidos no celeiro. Entregue o item ao morador indicado.
 - Ganhe selos da feira e troque por flores, piquenique e bandeirinhas em **Diário → Meu cantinho**. Decorações podem ser guardadas e recolocadas sem pagar novamente.
 - Use o menu Portfólio dentro do jogo para acessar os conteúdos diretamente. Escape fecha as janelas. O botão ? reabre as instruções.
 - Em **Conhecer Matheus**, escolha **Começar passeio** para uma rota opcional por apresentação, projetos e trajetória. Ela pode ser pausada e retomada; currículo e seções continuam livres.
 
 O progresso é salvo neste navegador. Limpar os dados do site apaga o progresso; não há sincronização entre dispositivos. O crescimento usa o tempo decorrido após a rega, inclusive durante a ausência. A economia é local e não envolve dinheiro real.
 
-É possível concluir um capítulo por data de calendário no fuso registrado na primeira visita — não precisa esperar 24 horas nem voltar em dias consecutivos. Não há perda por ausência, plantas mortas ou sequência obrigatória. Um capítulo incompleto continua de onde parou. Após o final, encomendas e descobertas continuam em rotação; há sete lembranças e três decorações nesta versão. Depois da feira, cada data também traz uma atividade curta com Lia, Bento ou Rosa, que rende +1 selo, +15 moedas e uma pequena mudança visual no cenário. Vacas e galinhas agora podem ser cuidadas e produzir uma vez por data; leite e ovos entram na mochila e podem ser vendidos no mercado. Com 3 pontos de amizade, cada morador também revela uma memória opcional, registrada no diário e disponível uma única vez. O ritmo pretendido é uma visita curta de aproximadamente cinco minutos, sem limitar o tempo de jogo.
+É possível concluir um capítulo por data de calendário no fuso registrado na primeira visita — não precisa esperar 24 horas nem voltar em dias consecutivos. Não há perda por ausência, plantas mortas ou sequência obrigatória. Um capítulo incompleto continua de onde parou. Após o final, encomendas e descobertas continuam em rotação; há sete lembranças e três decorações nesta versão. Depois da feira, cada data também traz uma atividade curta com Lia, Bento ou Rosa, que rende +1 selo, +15 moedas e uma pequena mudança visual no cenário. Vacas e galinhas agora podem ser cuidadas e produzir uma vez por data; leite e ovos entram na mochila, podem ser vendidos no mercado e também aparecem em algumas encomendas diárias. Com 3 pontos de amizade, cada morador também revela uma memória opcional, registrada no diário e disponível uma única vez. O ritmo pretendido é uma visita curta de aproximadamente cinco minutos, sem limitar o tempo de jogo.
 
 Saves v1 e v2 migram preservando a fazenda; o inventário animal e as memórias de amizade começam vazios quando os campos ainda não existiam. A chave de armazenamento permanece `vale-do-matheus:v1` por compatibilidade. O calendário usa o relógio local e impede renovação ao retrocedê-lo, mas não pretende proteger contra edição deliberada do save ou avanço manual da data.
 
 ## Organização
 
-- `scripts/generate-assets.mjs`: desenhos em pixels, codificador PNG e manifesto das imagens. Execute `npm run assets` para gerar os 60 arquivos em `public/assets`. O comando também roda antes do desenvolvimento e do build.
+- `scripts/generate-assets.mjs`: desenhos em pixels, codificador PNG e manifesto das imagens. Execute `npm run assets` para gerar os 62 arquivos em `public/assets`. O comando também roda antes do desenvolvimento e do build.
 - `src/model.ts`: regras de cultivo, inventário, economia, validação de salvamentos e busca de caminhos.
 - `src/valley.ts` e `src/valley-content.ts`: calendário, capítulos, amizade, encomendas e recompensas.
 - `src/valley-view.ts`, `src/valley.css` e `src/valley-world.ts`: diário, coleção, decoração e reconstrução do cenário.
@@ -84,7 +84,7 @@ No jogo, cada projeto agora também abre um case com contexto, decisões técnic
 
 Este repositório publica o código do portfólio. Hospedagem e deploy automático não estão ativados.
 
-Três moradores seguem rotinas; vacas e galinhas circulam nas áreas rurais. As atividades dos NPCs são ambientais e não alteram o inventário do visitante. O trator é um ponto de interação da oficina; direção, automação, leite e ovos ficam para expansões.
+Três moradores seguem rotinas; vacas e galinhas circulam nas áreas rurais. As atividades dos NPCs são ambientais e não alteram o inventário do visitante. O trator é um ponto de interação da oficina; direção e automação ficam para expansões. O cuidado diário dos animais já rende leite e ovos, com venda e encomendas integradas ao ciclo da fazenda.
 
 Lia, Bento e Rosa exibem no cenário o que estão fazendo e alternam conversas após o primeiro encontro do dia. As falas acompanham o capítulo atual e, depois da feira, refletem a vida do vale restaurado.
 
