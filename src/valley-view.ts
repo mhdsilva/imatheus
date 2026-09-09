@@ -165,11 +165,22 @@ export function renderValleyPage(
           return `<article class="appearance-card ${selected ? "selected" : ""}"><span class="appearance-preview" style="background-image:url('${assetPath(appearance.sprite)}')"></span><div><span>${selected ? "EM USO" : "PALETA"}</span><h3>${appearance.name}</h3><p>${key === "meadow" ? "Cores claras para um dia entre canteiros." : key === "sunset" ? "Tons quentes para caminhar no fim da tarde." : "Um toque frutado para deixar o vale mais vivo."}</p><button class="secondary-button" data-appearance="${key}" ${selected ? "disabled" : ""}>${selected ? "✓ Escolhida" : "Usar esta aparência"}</button></div></article>`;
         })
         .join("")}</div>` +
-      `<h3 class="appearance-section-title">Acessórios</h3><p class="daily-note">Pequenos detalhes para levar na caminhada. Todos estão disponíveis desde o começo.</p><div class="accessory-grid">${accessoryKeys
+      `<h3 class="appearance-section-title">Acessórios</h3><p class="daily-note">Pequenos detalhes para levar na caminhada. Lenço e bolsa estão disponíveis desde o começo; o Broche da feira chega depois de três atividades pós-feira.</p><div class="accessory-grid">${accessoryKeys
         .map((key) => {
           const accessory = ACCESSORIES[key],
-            selected = farm.accessory === key;
-          return `<article class="appearance-card accessory-card ${selected ? "selected" : ""}"><span class="appearance-preview" style="background-image:url('${assetPath(playerSprite(farm.appearance, key))}')"></span><div><span>${selected ? "EM USO" : "ACESSÓRIO"}</span><h3>${accessory.name}</h3><p>${key === "none" ? "Um visual limpo para cuidar da fazenda." : key === "scarf" ? "Um lenço alegre para dias de vento." : "Uma bolsa para ideias, sementes e ferramentas."}</p><button class="secondary-button" data-accessory="${key}" ${selected ? "disabled" : ""}>${selected ? "✓ Escolhido" : "Usar este acessório"}</button></div></article>`;
+            selected = farm.accessory === key,
+            unlocked = farm.unlockedAccessories.includes(key),
+            locked = !unlocked,
+            remaining = Math.max(0, 3 - farm.valley.postfairActivities),
+            description =
+              key === "none"
+                ? "Um visual limpo para cuidar da fazenda."
+                : key === "scarf"
+                  ? "Um lenço alegre para dias de vento."
+                  : key === "satchel"
+                    ? "Uma bolsa para ideias, sementes e ferramentas."
+                    : `Uma lembrança dourada da feira. Faltam ${remaining} atividades pós-feira.`;
+          return `<article class="appearance-card accessory-card ${selected ? "selected" : ""} ${locked ? "locked" : ""}"><span class="appearance-preview" style="background-image:url('${assetPath(playerSprite(farm.appearance, key))}')"></span><div><span>${selected ? "EM USO" : locked ? "BLOQUEADO" : "ACESSÓRIO"}</span><h3>${accessory.name}</h3><p>${description}</p><button class="secondary-button" data-accessory="${key}" ${selected || locked ? "disabled" : ""}>${selected ? "✓ Escolhido" : locked ? `Faltam ${remaining} atividades` : "Usar este acessório"}</button></div></article>`;
         })
         .join("")}</div>`
     );

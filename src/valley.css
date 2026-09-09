@@ -273,6 +273,18 @@
   border-color: #b9a05e;
   background: #fff4d7;
 }
+.appearance-card.locked {
+  border-style: dashed;
+  background: #f1efe5;
+}
+.appearance-card.locked .appearance-preview {
+  filter: grayscale(0.65) saturate(0.65);
+  opacity: 0.68;
+}
+.appearance-card.locked h3,
+.appearance-card.locked p {
+  color: #959583;
+}
 .appearance-preview {
   display: block;
   width: 64px;

@@ -83,17 +83,18 @@ test("character appearance changes persist and old saves receive the default", (
 });
 test("character accessories combine with palettes and migrate old saves", () => {
   const state = newFarm();
-  assert.deepEqual(accessoryKeys, ["none", "scarf", "satchel"]);
+  assert.deepEqual(accessoryKeys, ["none", "scarf", "satchel", "badge"]);
   assert.equal(state.accessory, "none");
   assert.equal(playerSprite("sunset", "scarf"), "player-sunset-scarf");
   assert.equal(setAccessory(state, "satchel"), true);
   assert.equal(state.accessory, "satchel");
   assert.equal(setAccessory(state, "satchel"), false);
+  assert.equal(setAccessory(state, "badge"), false);
   assert.equal(setAccessory(state, "unknown"), false);
   const legacy = structuredClone(state) as { accessory?: unknown };
   delete legacy.accessory;
   assert.equal(restore(JSON.stringify(legacy)).accessory, "none");
-  assert.equal(ACCESSORIES.scarf.name, "Lenço");
+  assert.equal(ACCESSORIES.badge.name, "Broche da feira");
 });
 test("locked plots do not consume seeds until the upgrade is purchased", () => {
   const state = newFarm();

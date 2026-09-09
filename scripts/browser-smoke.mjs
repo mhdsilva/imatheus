@@ -91,6 +91,11 @@ try {
     await page.locator("#welcome-close").click();
   await page.locator("#journal-button").click();
   await page.locator('#modal-content [data-page="appearance"]').click();
+  assert.equal(
+    await page.locator('[data-accessory="badge"]').isDisabled(),
+    true,
+  );
+  await page.getByText("Faltam 3 atividades", { exact: true }).waitFor();
   await page.locator('[data-appearance="sunset"]').click();
   await page.waitForFunction(
     () =>

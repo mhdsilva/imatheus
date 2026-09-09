@@ -13,6 +13,7 @@ import {
 } from "./valley-content";
 import {
   ANIMAL_PRODUCTS,
+  unlockAccessory,
   type Animal,
   type FarmState,
   type Crop,
@@ -27,6 +28,7 @@ export type ValleyState = {
   letterRead: boolean;
   flags: string[];
   tokens: number;
+  postfairActivities: number;
   friendship: Record<Resident, number>;
   keepsakes: string[];
   decorations: Decoration[];
@@ -91,6 +93,7 @@ export function newValley(
     letterRead: false,
     flags: [],
     tokens: 0,
+    postfairActivities: 0,
     friendship: { Lia: 0, Bento: 0, Rosa: 0 },
     keepsakes: [],
     decorations: [],
@@ -145,6 +148,9 @@ export function restoreValley(raw: unknown, now = Date.now()): ValleyState {
     );
     return {
       ...s,
+      postfairActivities: number(s.postfairActivities)
+        ? s.postfairActivities
+        : 0,
       friendshipScenes: Array.isArray(s.friendshipScenes)
         ? s.friendshipScenes.filter((npc): npc is Resident =>
             RESIDENTS.includes(npc),
@@ -424,10 +430,16 @@ export function completePostfair(
   if (event.npc !== npc)
     return result(false, `Hoje, ${event.npc} precisa de uma pequena ajuda.`);
   farm.valley.daily.postfairDone = true;
+  farm.valley.postfairActivities++;
   farm.valley.tokens++;
   farm.valley.friendship[npc]++;
   farm.coins += 15;
-  return result(true, `${event.title} concluído. +1 selo e +15 moedas.`);
+  const badgeUnlocked =
+    farm.valley.postfairActivities >= 3 && unlockAccessory(farm, "badge");
+  return result(
+    true,
+    `${event.title} concluído. +1 selo e +15 moedas.${badgeUnlocked ? " O Broche da feira agora está disponível." : ""}`,
+  );
 }
 export function completeFriendshipScene(
   farm: FarmState,

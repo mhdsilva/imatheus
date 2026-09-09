@@ -546,6 +546,11 @@ function person(name, shirt, hat, overrides = {}, accessory = "none") {
         r(22, 30, 7, 6, "#c68a4e");
         r(23, 31, 5, 1, "#f0cc7a");
         r(24, 34, 2, 1, "#493d39");
+      } else if (accessory === "badge") {
+        r(20, 23, 5, 5, "#f5c35c");
+        r(21, 24, 3, 3, "#e57b59");
+        r(22, 25, 1, 1, "#fff0c3");
+        r(20, 28, 1, 1, "#fff0c3");
       }
     }
   save(name);
@@ -573,6 +578,7 @@ for (const [name, shirt, hat, overrides] of [
     ["none", ""],
     ["scarf", "-scarf"],
     ["satchel", "-satchel"],
+    ["badge", "-badge"],
   ])
     person(`${name}${suffix}`, shirt, hat, overrides, accessory);
 }

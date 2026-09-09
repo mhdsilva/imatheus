@@ -209,6 +209,19 @@ test("post-fair activity rewards one short visit and resets on a new date", () =
   assert.equal(farm.valley.daily.postfairDone, false);
 });
 
+test("three post-fair activities unlock the fair badge", () => {
+  const farm = farmAt();
+  farm.valley.chapter = 7;
+  farm.valley.postfairActivities = 2;
+  farm.valley.daily.postfairId = dailyPostfair(farm).id;
+  const event = dailyPostfair(farm);
+  const result = valley.completePostfair(farm, event.npc, morning);
+  assert.equal(result.ok, true);
+  assert.equal(farm.valley.postfairActivities, 3);
+  assert.ok(farm.unlockedAccessories.includes("badge"));
+  assert.match(result.message, /Broche da feira/);
+});
+
 test("animal production requires daily care and is collected only once", () => {
   const farm = farmAt();
   assert.equal(valley.collectAnimalProduct(farm, "cow", morning).ok, false);

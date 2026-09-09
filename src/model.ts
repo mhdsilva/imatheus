@@ -58,6 +58,7 @@ export const ACCESSORIES = {
   none: { name: "Sem acessório", suffix: "" },
   scarf: { name: "Lenço", suffix: "-scarf" },
   satchel: { name: "Bolsa de ferramentas", suffix: "-satchel" },
+  badge: { name: "Broche da feira", suffix: "-badge" },
 } as const;
 export type Accessory = keyof typeof ACCESSORIES;
 export const accessoryKeys = Object.keys(ACCESSORIES) as Accessory[];
@@ -76,6 +77,7 @@ export type FarmState = {
   animalProducts: Record<AnimalProduct, number>;
   appearance: Appearance;
   accessory: Accessory;
+  unlockedAccessories: Accessory[];
   plots: Plot[];
   upgraded: boolean;
   harvested: number;
@@ -101,6 +103,7 @@ export function newFarm(now = Date.now()): FarmState {
     animalProducts: { milk: 0, egg: 0 },
     appearance: "meadow",
     accessory: "none",
+    unlockedAccessories: ["none", "scarf", "satchel"],
     plots: Array.from({ length: 24 }, (_, i) =>
       i < 6
         ? { crop: "carrot", plantedAt: now - 70_000, watered: true }
@@ -190,8 +193,16 @@ export function setAppearance(state: FarmState, appearance: string): boolean {
 }
 export function setAccessory(state: FarmState, accessory: string): boolean {
   if (!accessoryKeys.includes(accessory as Accessory)) return false;
+  if (!state.unlockedAccessories.includes(accessory as Accessory)) return false;
   if (state.accessory === accessory) return false;
   state.accessory = accessory as Accessory;
+  return true;
+}
+export function unlockAccessory(state: FarmState, accessory: string): boolean {
+  if (!accessoryKeys.includes(accessory as Accessory)) return false;
+  const key = accessory as Accessory;
+  if (state.unlockedAccessories.includes(key)) return false;
+  state.unlockedAccessories.push(key);
   return true;
 }
 function count(value: unknown): value is number {
@@ -232,8 +243,17 @@ export function restore(raw: string | null, now = Date.now()): FarmState {
     const appearance = appearanceKeys.includes(s.appearance as Appearance)
       ? (s.appearance as Appearance)
       : "meadow";
-    const accessory = accessoryKeys.includes(s.accessory as Accessory)
+    const requestedAccessory = accessoryKeys.includes(s.accessory as Accessory)
       ? (s.accessory as Accessory)
+      : "none";
+    const unlockedAccessories = accessoryKeys.filter(
+      (key) =>
+        ["none", "scarf", "satchel"].includes(key) ||
+        (Array.isArray(s.unlockedAccessories) &&
+          s.unlockedAccessories.includes(key)),
+    );
+    const accessory = unlockedAccessories.includes(requestedAccessory)
+      ? requestedAccessory
       : "none";
     if (
       !Array.isArray(s.plots) ||
@@ -259,6 +279,7 @@ export function restore(raw: string | null, now = Date.now()): FarmState {
       animalProducts,
       appearance,
       accessory,
+      unlockedAccessories,
       tour: restoreTour(s.tour),
       valley: s.version === 1 ? newValley(now) : restoreValley(s.valley, now),
     };
