@@ -2,7 +2,15 @@ import Phaser from "phaser";
 import { assetPath } from "./assets";
 import { ValleyWorld, VALLEY_ASSETS } from "./valley-world";
 import { residentActivity, type Resident } from "./valley-content";
-import { CROPS, findPath, stage, type FarmState, type Point } from "./model";
+import {
+  APPEARANCES,
+  CROPS,
+  appearanceKeys,
+  findPath,
+  stage,
+  type FarmState,
+  type Point,
+} from "./model";
 import type { TourStop } from "./tour";
 
 export type WorldEvents = {
@@ -41,7 +49,9 @@ type Actor = {
 };
 const TILE = 16,
   COLS = 60,
-  ROWS = 40;
+  ROWS = 40,
+  PLAYER_SPRITES = appearanceKeys.map((key) => APPEARANCES[key].sprite),
+  CHARACTER_SPRITES = [...PLAYER_SPRITES, "farmer", "mechanic", "merchant"];
 const PORTFOLIO_STOP_TARGETS: Record<
   TourStop,
   { targetId: string; label: string }
@@ -118,7 +128,7 @@ export class FarmScene extends Phaser.Scene {
       ...Object.keys(CROPS).flatMap((k) => [`${k}-0`, `${k}-1`, `${k}-2`]),
     ])
       this.load.image(key, assetPath(key));
-    for (const key of ["player", "farmer", "mechanic", "merchant"])
+    for (const key of CHARACTER_SPRITES)
       this.load.spritesheet(key, assetPath(key), {
         frameWidth: 32,
         frameHeight: 48,
@@ -211,7 +221,7 @@ export class FarmScene extends Phaser.Scene {
       if (x > 818 && x < 880) continue;
       this.prop("flower", x, y).setAlpha(0.85);
     }
-    for (const key of ["player", "farmer", "mechanic", "merchant"])
+    for (const key of CHARACTER_SPRITES)
       for (let d = 0; d < 4; d++)
         this.anims.create({
           key: `${key}-walk-${d}`,
@@ -223,7 +233,7 @@ export class FarmScene extends Phaser.Scene {
           repeat: -1,
         });
     this.player = this.add
-      .sprite(456, 376, "player", 0)
+      .sprite(456, 376, APPEARANCES[this.hooks.state.appearance].sprite, 0)
       .setOrigin(0.5, 1)
       .setDepth(376)
       .setScale(0.62);
@@ -695,7 +705,9 @@ export class FarmScene extends Phaser.Scene {
   }
   focusPortfolioStop(stop: TourStop) {
     const config = PORTFOLIO_STOP_TARGETS[stop];
-    const target = this.targets.find((candidate) => candidate.id === config.targetId);
+    const target = this.targets.find(
+      (candidate) => candidate.id === config.targetId,
+    );
     this.clearPortfolioStop();
     if (!target) {
       this.hooks.notify("O próximo lugar ainda está sendo preparado.");
@@ -815,6 +827,7 @@ export class FarmScene extends Phaser.Scene {
     });
   }
   refreshValley() {
+    this.refreshPlayerAppearance();
     this.valleyWorld?.refresh();
     if (
       !this.fairRoutesAdded &&
@@ -827,6 +840,12 @@ export class FarmScene extends Phaser.Scene {
         actor.goals.push({ x: 440, y: 488 }, { x: 488, y: 488 });
       this.fairRoutesAdded = true;
     }
+  }
+  private refreshPlayerAppearance() {
+    if (!this.player) return;
+    const sprite = APPEARANCES[this.hooks.state.appearance].sprite;
+    if (this.player.texture.key !== sprite)
+      this.player.setTexture(sprite, this.lastDirection * 4);
   }
   update(time: number, delta: number) {
     if (!this.player) return;
@@ -862,7 +881,13 @@ export class FarmScene extends Phaser.Scene {
         );
       const direction = crossing
         ? -1
-        : this.move(this.player, this.playerPath, 94, dt, "player");
+        : this.move(
+            this.player,
+            this.playerPath,
+            94,
+            dt,
+            APPEARANCES[this.hooks.state.appearance].sprite,
+          );
       if (direction >= 0) this.lastDirection = direction;
       if (crossing) this.player.anims.stop();
       if (!this.playerPath.length) {

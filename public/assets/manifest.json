@@ -88,6 +88,32 @@
     ],
     "framesPerDirection": 4
   },
+  "player-sunset": {
+    "width": 128,
+    "height": 192,
+    "frameWidth": 32,
+    "frameHeight": 48,
+    "directions": [
+      "down",
+      "left",
+      "right",
+      "up"
+    ],
+    "framesPerDirection": 4
+  },
+  "player-berry": {
+    "width": 128,
+    "height": 192,
+    "frameWidth": 32,
+    "frameHeight": 48,
+    "directions": [
+      "down",
+      "left",
+      "right",
+      "up"
+    ],
+    "framesPerDirection": 4
+  },
   "farmer": {
     "width": 128,
     "height": 192,

@@ -89,6 +89,16 @@ try {
   console.log("Professional tour destination does not move the player.");
   if (await page.locator("#welcome-close").isVisible())
     await page.locator("#welcome-close").click();
+  await page.locator("#journal-button").click();
+  await page.locator('#modal-content [data-page="appearance"]').click();
+  await page.locator('[data-appearance="sunset"]').click();
+  await page.waitForFunction(
+    () =>
+      window.__farm.state.appearance === "sunset" &&
+      window.__farm.scene.player.texture.key === "player-sunset",
+  );
+  console.log("Character appearance selection and live sprite swap verified.");
+  await page.keyboard.press("Escape");
   const initial = await page.evaluate(() => ({
     x: window.__farm.scene.player.x,
     y: window.__farm.scene.player.y,

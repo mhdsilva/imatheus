@@ -250,6 +250,52 @@
   line-height: 1.7;
   color: #7b826c;
 }
+.appearance-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+.appearance-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid #dfdfca;
+  border-radius: 12px;
+  background: #f7f4e4;
+}
+.appearance-card.selected {
+  border-color: #b9a05e;
+  background: #fff4d7;
+}
+.appearance-preview {
+  display: block;
+  width: 64px;
+  height: 96px;
+  background-repeat: no-repeat;
+  background-size: 400% 400%;
+  background-position: 0 0;
+  image-rendering: pixelated;
+}
+.appearance-card > div {
+  flex: 1;
+}
+.appearance-card span:not(.appearance-preview) {
+  font-size: 9px;
+  letter-spacing: 1.2px;
+  color: #8b7956;
+}
+.appearance-card h3 {
+  margin: 6px 0;
+  color: #4c6247;
+}
+.appearance-card p {
+  min-height: 42px;
+  margin: 0 0 14px;
+  font-size: 11px;
+  line-height: 1.6;
+  color: #7b826c;
+}
 .keepsake-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -436,6 +482,9 @@
   }
   .animal-product-card button {
     width: 100%;
+  }
+  .appearance-grid {
+    grid-template-columns: 1fr;
   }
   .memory-card {
     align-items: flex-start;

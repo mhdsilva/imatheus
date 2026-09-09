@@ -47,6 +47,13 @@ export type Animal = "cow" | "chicken";
 export const animalProductKeys = Object.keys(
   ANIMAL_PRODUCTS,
 ) as AnimalProduct[];
+export const APPEARANCES = {
+  meadow: { name: "Horta", sprite: "player" },
+  sunset: { name: "Pôr do sol", sprite: "player-sunset" },
+  berry: { name: "Frutas vermelhas", sprite: "player-berry" },
+} as const;
+export type Appearance = keyof typeof APPEARANCES;
+export const appearanceKeys = Object.keys(APPEARANCES) as Appearance[];
 export type Plot = { crop: Crop | null; plantedAt: number; watered: boolean };
 export type FarmState = {
   version: 2;
@@ -54,6 +61,7 @@ export type FarmState = {
   seeds: Record<Crop, number>;
   produce: Record<Crop, number>;
   animalProducts: Record<AnimalProduct, number>;
+  appearance: Appearance;
   plots: Plot[];
   upgraded: boolean;
   harvested: number;
@@ -77,6 +85,7 @@ export function newFarm(now = Date.now()): FarmState {
     seeds: { carrot: 3, turnip: 1, corn: 0 },
     produce: { carrot: 0, turnip: 0, corn: 0 },
     animalProducts: { milk: 0, egg: 0 },
+    appearance: "meadow",
     plots: Array.from({ length: 24 }, (_, i) =>
       i < 6
         ? { crop: "carrot", plantedAt: now - 70_000, watered: true }
@@ -158,6 +167,12 @@ export function upgrade(state: FarmState): boolean {
   state.upgraded = true;
   return true;
 }
+export function setAppearance(state: FarmState, appearance: string): boolean {
+  if (!appearanceKeys.includes(appearance as Appearance)) return false;
+  if (state.appearance === appearance) return false;
+  state.appearance = appearance as Appearance;
+  return true;
+}
 function count(value: unknown): value is number {
   return (
     Number.isSafeInteger(value) &&
@@ -193,6 +208,9 @@ export function restore(raw: string | null, now = Date.now()): FarmState {
       !animalProductKeys.every((k) => count(animalProducts[k]))
     )
       return newFarm(now);
+    const appearance = appearanceKeys.includes(s.appearance as Appearance)
+      ? (s.appearance as Appearance)
+      : "meadow";
     if (
       !Array.isArray(s.plots) ||
       s.plots.length !== 24 ||
@@ -215,6 +233,7 @@ export function restore(raw: string | null, now = Date.now()): FarmState {
       ...s,
       version: 2,
       animalProducts,
+      appearance,
       tour: restoreTour(s.tour),
       valley: s.version === 1 ? newValley(now) : restoreValley(s.valley, now),
     };

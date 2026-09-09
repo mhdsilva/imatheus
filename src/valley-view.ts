@@ -1,5 +1,11 @@
 import { assetPath } from "./assets";
-import { ANIMAL_PRODUCTS, CROPS, type FarmState } from "./model";
+import {
+  ANIMAL_PRODUCTS,
+  APPEARANCES,
+  CROPS,
+  appearanceKeys,
+  type FarmState,
+} from "./model";
 import {
   CHAPTERS,
   DECORATIONS,
@@ -24,7 +30,7 @@ const escape = (text: string) =>
 const button = (page: string, text: string) =>
   `<button class="diary-tab" data-page="${page}">${text}</button>`;
 const navigation = () =>
-  `<nav class="diary-tabs" aria-label="Diário">${button("journal", "Cartas")}${button("request", "Pedido de hoje")}${button("collection", "Lembranças")}${button("decor", "Meu cantinho")}</nav>`;
+  `<nav class="diary-tabs" aria-label="Diário">${button("journal", "Cartas")}${button("request", "Pedido de hoje")}${button("collection", "Lembranças")}${button("decor", "Meu cantinho")}${button("appearance", "Meu personagem")}</nav>`;
 const hearts = (points: number) =>
   "♥".repeat(Math.min(5, Math.ceil(points / 3))) +
   "♡".repeat(5 - Math.min(5, Math.ceil(points / 3)));
@@ -143,6 +149,19 @@ export function renderValleyPage(
           active = s.activeDecorations.includes(d.id);
         return `<article class="decoration-card"><img src="${assetPath(d.image)}" alt=""/><div><h3>${d.name}</h3><p>${d.description}</p><button class="secondary-button" data-valley="${owned ? "toggle" : "buy"}" data-decoration="${d.id}" ${!owned && s.tokens < d.price ? "disabled" : ""}>${owned ? (active ? "Guardar decoração" : "Colocar no cenário") : `Escolher · ${d.price} selos`}</button></div></article>`;
       }).join("")
+    );
+  if (page === "appearance")
+    return (
+      navigation() +
+      title("Um toque de cor.", "MEU PERSONAGEM") +
+      `<p class="daily-note">Escolha uma paleta para acompanhar seus passeios. A aparência muda só o visual e fica guardada neste navegador.</p>` +
+      `<div class="appearance-grid">${appearanceKeys
+        .map((key) => {
+          const appearance = APPEARANCES[key],
+            selected = farm.appearance === key;
+          return `<article class="appearance-card ${selected ? "selected" : ""}"><span class="appearance-preview" style="background-image:url('${assetPath(appearance.sprite)}')"></span><div><span>${selected ? "EM USO" : "PALETA"}</span><h3>${appearance.name}</h3><p>${key === "meadow" ? "Cores claras para um dia entre canteiros." : key === "sunset" ? "Tons quentes para caminhar no fim da tarde." : "Um toque frutado para deixar o vale mais vivo."}</p><button class="secondary-button" data-appearance="${key}" ${selected ? "disabled" : ""}>${selected ? "✓ Escolhida" : "Usar esta aparência"}</button></div></article>`;
+        })
+        .join("")}</div>`
     );
   if (page === "work") {
     const sites: Record<

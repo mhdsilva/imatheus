@@ -30,12 +30,14 @@ import { renderPortfolio } from "./portfolio-view";
 import {
   buySeed,
   ANIMAL_PRODUCTS,
+  APPEARANCES,
   animalProductKeys,
   CROPS,
   cropKeys,
   plotAction,
   restore,
   sellAll,
+  setAppearance,
   upgrade,
   UPGRADE_PRICE,
   type Crop,
@@ -142,7 +144,8 @@ function renderTour() {
     $("tour-kicker").textContent = "PASSEIO PAUSADO";
     title.textContent = "Quer retomar de onde parou?";
     description.textContent = "Seu próximo lugar continua marcado na fazenda.";
-    actions.innerHTML = '<div class="tour-actions"><button data-tour="resume">Retomar passeio</button></div>';
+    actions.innerHTML =
+      '<div class="tour-actions"><button data-tour="resume">Retomar passeio</button></div>';
     return;
   }
   panel.hidden = true;
@@ -231,13 +234,12 @@ function open(page: string, npc = "") {
   } else if (professionalPage) {
     content.innerHTML = professionalPage;
   } else if (page === "shop") {
-    const total = cropKeys.reduce(
-      (v, k) => v + state.produce[k] * CROPS[k].price,
-      0,
-    ) + animalProductKeys.reduce(
-      (v, k) => v + state.animalProducts[k] * ANIMAL_PRODUCTS[k].price,
-      0,
-    );
+    const total =
+      cropKeys.reduce((v, k) => v + state.produce[k] * CROPS[k].price, 0) +
+      animalProductKeys.reduce(
+        (v, k) => v + state.animalProducts[k] * ANIMAL_PRODUCTS[k].price,
+        0,
+      );
     content.innerHTML =
       hero(
         "market",
@@ -332,7 +334,8 @@ function open(page: string, npc = "") {
       state.tour.current > 0 && state.tour.current < TOUR_STOPS.length
         ? "resume"
         : "start";
-    const tourLabel = tourAction === "resume" ? "Retomar passeio" : "Começar passeio";
+    const tourLabel =
+      tourAction === "resume" ? "Retomar passeio" : "Começar passeio";
     content.innerHTML =
       hero(
         "sunflower",
@@ -390,15 +393,15 @@ document.addEventListener("click", (event) => {
               ? workAt(state, el.dataset.site as Site)
               : action === "buy"
                 ? buyDecoration(state, el.dataset.decoration!)
-              : action === "toggle"
+                : action === "toggle"
                   ? toggleDecoration(state, el.dataset.decoration!)
                   : action === "collect-animal"
                     ? collectAnimalProduct(state, el.dataset.animal as Animal)
-                  : action === "postfair"
-                    ? completePostfair(state, npc)
-                  : action === "friendship-scene"
-                    ? completeFriendshipScene(state, npc)
-                  : null;
+                    : action === "postfair"
+                      ? completePostfair(state, npc)
+                      : action === "friendship-scene"
+                        ? completeFriendshipScene(state, npc)
+                        : null;
     if (result) {
       updateUI();
       open(
@@ -406,6 +409,17 @@ document.addEventListener("click", (event) => {
         currentNpc,
       );
       notify(result.message);
+    }
+    return;
+  }
+  if (el.dataset.appearance) {
+    const key = el.dataset.appearance;
+    if (setAppearance(state, key)) {
+      updateUI();
+      open("appearance");
+      notify(
+        `Aparência ${APPEARANCES[state.appearance].name.toLowerCase()} escolhida.`,
+      );
     }
     return;
   }

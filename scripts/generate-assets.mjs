@@ -398,7 +398,7 @@ save("board");
 
 // A 32 × 48 source frame leaves room for facial features, layered clothing and
 // replaceable hair / hat / outfit palettes, while rendering at a small world size.
-function person(name, shirt, hat) {
+function person(name, shirt, hat, overrides = {}) {
   canvas(128, 192);
   const outfits = {
     player: {
@@ -426,7 +426,10 @@ function person(name, shirt, hat) {
       trim: "#e0b886",
     },
   };
-  const o = outfits[name];
+  const o = {
+    ...outfits[name.startsWith("player-") ? "player" : name],
+    ...overrides,
+  };
   for (let dir = 0; dir < 4; dir++)
     for (let f = 0; f < 4; f++) {
       const ox = f * 32,
@@ -542,6 +545,18 @@ function person(name, shirt, hat) {
   metadata[name].framesPerDirection = 4;
 }
 person("player", "#eee0b7", true);
+person("player-sunset", "#d98262", true, {
+  hair: "#5a3e46",
+  pants: "#714f68",
+  light: "#b27b75",
+  trim: "#f1c873",
+});
+person("player-berry", "#b5628c", false, {
+  hair: "#4d3a49",
+  pants: "#5e567c",
+  light: "#907bb2",
+  trim: "#eac19a",
+});
 person("farmer", "#db8961", true);
 person("mechanic", "#6d92a3", false);
 person("merchant", "#bb7891", false);

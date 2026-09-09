@@ -168,6 +168,8 @@ Prioridade: expansão posterior, dividida em duas entregas independentes.
 - Ampliar os pontos de decoração existentes antes de considerar posicionamento totalmente livre.
 - Cosméticos não concedem acesso privilegiado ao portfólio e não envolvem dinheiro real.
 
+Status em 9 de setembro de 2026: a primeira entrega está implementada com três paletas de personagem — Horta, Pôr do sol e Frutas vermelhas — geradas no mesmo formato 32 × 48, com quatro direções e quatro quadros por direção. A escolha fica disponível no Diário, troca o sprite imediatamente e migra saves antigos para a aparência padrão. Camadas independentes de cabelo, acessórios, confirmação de compra e desbloqueios por selos continuam como evolução futura.
+
 Conclusão: trocar a aparência e a decoração funciona durante caminhada, diálogos e recarregamento, sem desalinhamento, perda de itens ou compra duplicada.
 
 ### 5B. Leite e ovos

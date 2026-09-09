@@ -1,14 +1,17 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
+  APPEARANCES,
   ANIMAL_PRODUCTS,
   animalProductKeys,
+  appearanceKeys,
   buySeed,
   findPath,
   newFarm,
   plotAction,
   restore,
   sellAll,
+  setAppearance,
   stage,
   upgrade,
 } from "../src/model";
@@ -60,6 +63,19 @@ test("animal products join the market economy and cannot be sold twice", () => {
   );
   assert.deepEqual(state.animalProducts, { milk: 0, egg: 0 });
   assert.equal(sellAll(state), 0);
+});
+test("character appearance changes persist and old saves receive the default", () => {
+  const state = newFarm();
+  assert.deepEqual(appearanceKeys, ["meadow", "sunset", "berry"]);
+  assert.equal(state.appearance, "meadow");
+  assert.equal(setAppearance(state, "sunset"), true);
+  assert.equal(state.appearance, "sunset");
+  assert.equal(setAppearance(state, "sunset"), false);
+  assert.equal(setAppearance(state, "invalid"), false);
+  const legacy = structuredClone(state) as { appearance?: unknown };
+  delete legacy.appearance;
+  assert.equal(restore(JSON.stringify(legacy)).appearance, "meadow");
+  assert.equal(APPEARANCES.berry.sprite, "player-berry");
 });
 test("locked plots do not consume seeds until the upgrade is purchased", () => {
   const state = newFarm();
