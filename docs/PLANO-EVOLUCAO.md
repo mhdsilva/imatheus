@@ -177,6 +177,8 @@ Conclusão: trocar a aparência e a decoração funciona durante caminhada, diá
 - Rebalancear pedidos e preços para a produção animal complementar o cultivo.
 - Não adicionar fome, doença ou punição aos animais por ausência.
 
+Status em 9 de setembro de 2026: a primeira entrega está implementada. Cuidar de uma vaca ou das galinhas libera uma coleta diária de leite ou ovos; os produtos aparecem na mochila e entram na venda da Rosa, com migração segura de saves antigos. Entrega em pedidos, variação de quantidades e melhorias no celeiro continuam como evolução futura.
+
 Conclusão: produção e coleta têm regras explícitas, não duplicam ao recarregar e entram na economia sem tornar culturas e pedidos anteriores irrelevantes.
 
 Trator dirigível, receitas e automação ficam fora dessas duas entregas; cada um precisa justificar seu próprio ciclo de jogo antes de entrar no escopo.

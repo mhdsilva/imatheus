@@ -10,7 +10,12 @@ import {
   type Decoration,
   type Site,
 } from "./valley-content";
-import type { FarmState, Crop } from "./model";
+import {
+  ANIMAL_PRODUCTS,
+  type Animal,
+  type FarmState,
+  type Crop,
+} from "./model";
 
 export type ValleyState = {
   timezone: string;
@@ -32,6 +37,7 @@ export type ValleyState = {
     discovered: boolean;
     postfairId: string;
     postfairDone: boolean;
+    animalCollected: Animal[];
     chatted: Resident[];
     cared: string[];
   };
@@ -64,6 +70,7 @@ function newDaily(day: string): ValleyState["daily"] {
           POSTFAIR_EVENTS.length
       ].id,
     postfairDone: false,
+    animalCollected: [],
     chatted: [],
     cared: [],
   };
@@ -138,6 +145,11 @@ export function restoreValley(raw: unknown, now = Date.now()): ValleyState {
         postfairId: event?.id ?? newDaily(s.day).postfairId,
         postfairDone:
           typeof s.daily.postfairDone === "boolean" ? s.daily.postfairDone : false,
+        animalCollected: Array.isArray(s.daily.animalCollected)
+          ? s.daily.animalCollected.filter(
+              (animal): animal is Animal => animal === "cow" || animal === "chicken",
+            )
+          : [],
       },
     };
   } catch {
@@ -246,7 +258,7 @@ export function talkTo(
 }
 export function careFor(
   farm: FarmState,
-  animal: "cow" | "chicken",
+  animal: Animal,
   now = Date.now(),
 ): ActionResult {
   beginDay(farm, now);
@@ -264,6 +276,36 @@ export function careFor(
     animal === "cow"
       ? "Carinho e capim fresco. Um bom dia para a vaquinha."
       : "Água fresca e um carinho. As galinhas agradecem!",
+  );
+}
+export function collectAnimalProduct(
+  farm: FarmState,
+  animal: Animal,
+  now = Date.now(),
+): ActionResult {
+  beginDay(farm, now);
+  const product = animal === "cow" ? "milk" : "egg";
+  if (!farm.valley.daily.cared.includes(animal))
+    return result(
+      false,
+      animal === "cow"
+        ? "Faça carinho na vaquinha antes de recolher o leite."
+        : "Cumprimente as galinhas antes de recolher os ovos.",
+    );
+  if (farm.valley.daily.animalCollected.includes(animal))
+    return result(
+      false,
+      animal === "cow"
+        ? "O leite de hoje já foi recolhido."
+        : "Os ovos de hoje já foram recolhidos.",
+    );
+  farm.valley.daily.animalCollected.push(animal);
+  farm.animalProducts[product]++;
+  return result(
+    true,
+    animal === "cow"
+      ? `+1 ${ANIMAL_PRODUCTS.milk.name.toLowerCase()} na mochila.`
+      : `+1 ${ANIMAL_PRODUCTS.egg.name.toLowerCase()} na mochila.`,
   );
 }
 export function workAt(

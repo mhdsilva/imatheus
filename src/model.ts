@@ -26,12 +26,34 @@ export const CROPS = {
 } as const;
 export type Crop = keyof typeof CROPS;
 export const cropKeys = Object.keys(CROPS) as Crop[];
+export const ANIMAL_PRODUCTS = {
+  milk: {
+    name: "Leite",
+    plural: "leite",
+    price: 24,
+    animal: "cow",
+    image: "milk",
+  },
+  egg: {
+    name: "Ovo",
+    plural: "ovos",
+    price: 14,
+    animal: "chicken",
+    image: "egg",
+  },
+} as const;
+export type AnimalProduct = keyof typeof ANIMAL_PRODUCTS;
+export type Animal = "cow" | "chicken";
+export const animalProductKeys = Object.keys(
+  ANIMAL_PRODUCTS,
+) as AnimalProduct[];
 export type Plot = { crop: Crop | null; plantedAt: number; watered: boolean };
 export type FarmState = {
   version: 2;
   coins: number;
   seeds: Record<Crop, number>;
   produce: Record<Crop, number>;
+  animalProducts: Record<AnimalProduct, number>;
   plots: Plot[];
   upgraded: boolean;
   harvested: number;
@@ -54,6 +76,7 @@ export function newFarm(now = Date.now()): FarmState {
     coins: 35,
     seeds: { carrot: 3, turnip: 1, corn: 0 },
     produce: { carrot: 0, turnip: 0, corn: 0 },
+    animalProducts: { milk: 0, egg: 0 },
     plots: Array.from({ length: 24 }, (_, i) =>
       i < 6
         ? { crop: "carrot", plantedAt: now - 70_000, watered: true }
@@ -121,6 +144,10 @@ export function sellAll(state: FarmState): number {
     state.sold += state.produce[crop];
     state.produce[crop] = 0;
   }
+  for (const product of animalProductKeys) {
+    total += state.animalProducts[product] * ANIMAL_PRODUCTS[product].price;
+    state.animalProducts[product] = 0;
+  }
   state.coins += total;
   return total;
 }
@@ -160,6 +187,12 @@ export function restore(raw: string | null, now = Date.now()): FarmState {
       !cropKeys.every((k) => count(s.seeds[k]) && count(s.produce[k]))
     )
       return newFarm(now);
+    const animalProducts = s.animalProducts ?? { milk: 0, egg: 0 };
+    if (
+      !animalProducts ||
+      !animalProductKeys.every((k) => count(animalProducts[k]))
+    )
+      return newFarm(now);
     if (
       !Array.isArray(s.plots) ||
       s.plots.length !== 24 ||
@@ -181,6 +214,7 @@ export function restore(raw: string | null, now = Date.now()): FarmState {
     return {
       ...s,
       version: 2,
+      animalProducts,
       tour: restoreTour(s.tour),
       valley: s.version === 1 ? newValley(now) : restoreValley(s.valley, now),
     };

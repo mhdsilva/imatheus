@@ -139,6 +139,14 @@
     "width": 36,
     "height": 28
   },
+  "milk": {
+    "width": 20,
+    "height": 20
+  },
+  "egg": {
+    "width": 20,
+    "height": 20
+  },
   "carrot-0": {
     "width": 16,
     "height": 24

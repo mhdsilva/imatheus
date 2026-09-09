@@ -589,6 +589,23 @@ rect(27, 17, 8, 5, "#dba493");
 rect(29, 19, 1, 1, "wood");
 rect(33, 19, 1, 1, "wood");
 save("cow");
+canvas(20, 20);
+ellipse(10, 18, 7, 2, "#7a995c");
+rect(6, 7, 8, 10, "cream");
+rect(8, 4, 4, 4, "light");
+rect(9, 2, 2, 3, "blue");
+rect(7, 8, 6, 2, "sky");
+rect(7, 14, 6, 2, "#e5c985");
+rect(14, 10, 2, 4, "ink");
+rect(15, 9, 2, 2, "light");
+save("milk");
+canvas(20, 20);
+ellipse(10, 17, 7, 2, "#7a995c");
+ellipse(10, 11, 6, 8, "cream");
+ellipse(8, 8, 2, 3, "light");
+rect(13, 13, 2, 2, "#e1b66d");
+rect(6, 14, 2, 2, "#d7b26e");
+save("egg");
 
 for (const crop of ["carrot", "turnip", "corn"]) {
   for (let stage = 0; stage < 3; stage++) {

@@ -108,6 +108,25 @@ try {
     );
     await page.mouse.click(position.x, position.y);
   }
+  async function clickActor(name) {
+    const position = await page.evaluate((actorName) => {
+      const actor = window.__farm.scene.actors.find(
+        (candidate) => candidate.name === actorName,
+      );
+      return actor ? { x: actor.sprite.x, y: actor.sprite.y } : null;
+    }, name);
+    assert.ok(position, `actor ${name} should exist`);
+    await clickWorld(position.x, position.y);
+  }
+  async function openTarget(id) {
+    await page.evaluate((targetId) => {
+      const target = window.__farm.scene.targets.find(
+        (candidate) => candidate.id === targetId,
+      );
+      if (!target) throw new Error(`target ${targetId} should exist`);
+      target.action();
+    }, id);
+  }
   await clickWorld(480, 380);
   await page.waitForFunction(
     ({ x }) => Math.abs(window.__farm.scene.player.x - x) > 10,
@@ -196,6 +215,31 @@ try {
     await page.evaluate(() => window.__farm.state.seeds.corn),
     seedsBefore + 1,
   );
+  await page.keyboard.press("Escape");
+  await openTarget("barn");
+  await page.getByRole("heading", { name: "Um dia bom no pasto." }).waitFor();
+  assert.equal(
+    await page.locator('[data-valley="collect-animal"]').isDisabled(),
+    true,
+  );
+  await page.keyboard.press("Escape");
+  await clickActor("cow");
+  await page.waitForFunction(() =>
+    window.__farm.state.valley.daily.cared.includes("cow"),
+  );
+  await openTarget("barn");
+  await page
+    .locator('[data-valley="collect-animal"]:not([disabled])')
+    .click();
+  await page.waitForFunction(
+    () => window.__farm.state.animalProducts.milk === 1,
+  );
+  await page.keyboard.press("Escape");
+  await openTarget("market");
+  await page.getByRole("heading", { name: "Mercado da Rosa" }).waitFor();
+  await page.locator("#sell").click();
+  await page.waitForFunction(() => window.__farm.state.animalProducts.milk === 0);
+  console.log("Animal care, collection and sale verified.");
   await page.keyboard.press("Escape");
   const npcBefore = await page.evaluate(() =>
     window.__farm.scene.actors.map((a) => ({ x: a.sprite.x, y: a.sprite.y })),

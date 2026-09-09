@@ -184,22 +184,23 @@ try {
   assert.equal(progress.valley.chapter, 7);
   if (await page.locator("#modal[open]").count())
     await page.locator("#modal").evaluate((dialog) => dialog.close());
-  let postfairDone = false;
-  for (const npc of ["Lia", "Bento", "Rosa"]) {
-    await clickTarget(npc);
-    await page.locator("#modal[open]").waitFor();
-    const action = page.locator('[data-valley="postfair"]');
-    if (await action.count()) {
-      await action.click();
-      await page.waitForFunction(
-        () => window.__farm.state.valley.daily.postfairDone,
-      );
-      postfairDone = true;
-      break;
-    }
-    await page.keyboard.press("Escape");
-  }
-  assert.equal(postfairDone, true);
+  const postfairNpc = await page.evaluate(() => {
+    const residentByEvent = {
+      "lia-garden": "Lia",
+      "bento-workshop": "Bento",
+      "rosa-table": "Rosa",
+    };
+    return residentByEvent[window.__farm.state.valley.daily.postfairId];
+  });
+  assert.ok(postfairNpc, "the daily post-fair event should have a resident");
+  await clickTarget(postfairNpc);
+  await page.locator("#modal[open]").waitFor();
+  const action = page.locator('[data-valley="postfair"]');
+  await action.waitFor({ state: "visible" });
+  await action.click();
+  await page.waitForFunction(
+    () => window.__farm.state.valley.daily.postfairDone,
+  );
   await page.keyboard.press("Escape");
   const textures = await page.evaluate(() =>
     window.__farm.scene.children

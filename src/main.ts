@@ -12,6 +12,7 @@ import {
   completeChapter,
   deliverRequest,
   discover,
+  collectAnimalProduct,
   buyDecoration,
   toggleDecoration,
   completePostfair,
@@ -27,6 +28,8 @@ import { assetPath } from "./assets";
 import { renderPortfolio } from "./portfolio-view";
 import {
   buySeed,
+  ANIMAL_PRODUCTS,
+  animalProductKeys,
   CROPS,
   cropKeys,
   plotAction,
@@ -35,6 +38,7 @@ import {
   upgrade,
   UPGRADE_PRICE,
   type Crop,
+  type Animal,
 } from "./model";
 import {
   TOUR_STOPS,
@@ -229,6 +233,9 @@ function open(page: string, npc = "") {
     const total = cropKeys.reduce(
       (v, k) => v + state.produce[k] * CROPS[k].price,
       0,
+    ) + animalProductKeys.reduce(
+      (v, k) => v + state.animalProducts[k] * ANIMAL_PRODUCTS[k].price,
+      0,
     );
     content.innerHTML =
       hero(
@@ -243,7 +250,13 @@ function open(page: string, npc = "") {
             `<div class="shop-row"><img src="${assetPath(k)}" alt=""/><div><h3>Sementes de ${CROPS[k].name.toLowerCase()}</h3><p>Cresce em ${CROPS[k].duration / 1000}s após regar · venda por ${CROPS[k].price} moedas</p></div><button data-buy="${k}" ${state.coins < CROPS[k].seed ? "disabled" : ""}>${CROPS[k].seed} ● <span>Comprar</span></button></div>`,
         )
         .join("") +
-      `<div class="modal-actions"><button class="primary-button" id="sell" ${total === 0 ? "disabled" : ""}>Vender colheita · +${total} moedas</button></div><div class="upgrade-card"><h3>${state.upgraded ? "✓ Sua horta ganhou espaço!" : "Um espaço para crescer"}</h3><p>${state.upgraded ? "Seis novos canteiros estão prontos para receber suas sementes. Obrigado por ajudar o vale a florescer!" : "Desbloqueie seis canteiros e dê o próximo passo na sua fazenda."}</p>${state.upgraded ? "" : `<button class="secondary-button" id="upgrade" ${state.coins < UPGRADE_PRICE ? "disabled" : ""}>Ampliar a horta · ${UPGRADE_PRICE} moedas</button>`}</div>`;
+      animalProductKeys
+        .map(
+          (k) =>
+            `<div class="shop-row animal-product-row"><img src="${assetPath(ANIMAL_PRODUCTS[k].image)}" alt=""/><div><h3>${ANIMAL_PRODUCTS[k].name}</h3><p>${state.animalProducts[k]} na mochila · venda por ${ANIMAL_PRODUCTS[k].price} moedas</p></div><strong>${state.animalProducts[k]} ×</strong></div>`,
+        )
+        .join("") +
+      `<div class="modal-actions"><button class="primary-button" id="sell" ${total === 0 ? "disabled" : ""}>Vender colheita e produtos · +${total} moedas</button></div><div class="upgrade-card"><h3>${state.upgraded ? "✓ Sua horta ganhou espaço!" : "Um espaço para crescer"}</h3><p>${state.upgraded ? "Seis novos canteiros estão prontos para receber suas sementes. Obrigado por ajudar o vale a florescer!" : "Desbloqueie seis canteiros e dê o próximo passo na sua fazenda."}</p>${state.upgraded ? "" : `<button class="secondary-button" id="upgrade" ${state.coins < UPGRADE_PRICE ? "disabled" : ""}>Ampliar a horta · ${UPGRADE_PRICE} moedas</button>`}</div>`;
   } else if (page === "bag") {
     content.innerHTML =
       hero(
@@ -255,6 +268,12 @@ function open(page: string, npc = "") {
         .map(
           (k) =>
             `<div class="shop-row"><img src="${assetPath(k)}" alt=""/><div><h3>${CROPS[k].name}</h3><p>${state.seeds[k]} sementes · ${state.produce[k]} colhidos</p></div><strong>${state.produce[k] * CROPS[k].price} ●</strong></div>`,
+        )
+        .join("") +
+      animalProductKeys
+        .map(
+          (k) =>
+            `<div class="shop-row animal-product-row"><img src="${assetPath(ANIMAL_PRODUCTS[k].image)}" alt=""/><div><h3>${ANIMAL_PRODUCTS[k].name}</h3><p>${state.animalProducts[k]} guardados para a próxima ida ao mercado</p></div><strong>${state.animalProducts[k]} ×</strong></div>`,
         )
         .join("") +
       '<p class="help-text">Para vender ou comprar, visite o mercado da Rosa, à esquerda da praça.</p>';
@@ -290,6 +309,12 @@ function open(page: string, npc = "") {
         : `<p>${copy.Lia}</p>`) +
       `<p class="portfolio-thread">${portfolioTrail[npc] ?? portfolioTrail.Lia}</p><div class="modal-actions">${npc === "Rosa" ? '<button class="primary-button" data-page="career">Ver trajetória profissional →</button><button class="secondary-button" data-page="contact">Entrar em contato</button>' : npc === "Bento" ? '<button class="primary-button" data-page="projects">Projetos de Matheus →</button><button class="secondary-button" data-page="skills">Tecnologias</button>' : '<button class="primary-button" data-page="about">Sobre Matheus →</button>'}<button class="secondary-button" data-page="journal">Meu diário</button></div>`;
   } else if (page === "barn" || page === "coop") {
+    const animal: Animal = page === "barn" ? "cow" : "chicken";
+    const product = animal === "cow" ? "milk" : "egg";
+    const cared = state.valley.daily.cared.includes(animal);
+    const collected = state.valley.daily.animalCollected.includes(animal);
+    const animalName = animal === "cow" ? "vaquinha" : "galinhas";
+    const productName = ANIMAL_PRODUCTS[product].name.toLowerCase();
     content.innerHTML =
       hero(
         page === "barn" ? "cow" : "chicken",
@@ -300,7 +325,7 @@ function open(page: string, npc = "") {
           ? "Grama fresca, sombra e nenhuma pressa."
           : "Ciscar, passear e recomeçar.",
       ) +
-      `<p>${page === "barn" ? "As vacas passam o dia passeando e descansando no pasto. Clique nelas para fazer um carinho." : "As galinhas têm uma agenda cheia: procurar sementes e explorar cada cantinho do cercado. Clique nelas para cumprimentar."}</p><div class="content-card"><h3>O vale ainda vai crescer</h3><p>Produção de leite e ovos faz parte das próximas expansões. Por enquanto, o seu primeiro negócio começa na horta.</p></div>`;
+      `<p>${page === "barn" ? "As vacas passam o dia passeando e descansando no pasto. Clique nelas para fazer um carinho." : "As galinhas têm uma agenda cheia: procurar sementes e explorar cada cantinho do cercado. Clique nelas para cumprimentar."}</p><div class="animal-product-card"><img src="${assetPath(ANIMAL_PRODUCTS[product].image)}" alt=""/><div><span>PRODUÇÃO DE HOJE</span><h3>${ANIMAL_PRODUCTS[product].name}</h3><p>${collected ? `Você já guardou o ${productName} de hoje.` : cared ? `Tudo pronto: recolha o ${productName} fresco de ${animalName}.` : `Faça carinho n${animal === "cow" ? "a" : "as"} ${animalName} no pasto antes de recolher.`}</p></div><button class="secondary-button" data-valley="collect-animal" data-animal="${animal}" ${!cared || collected ? "disabled" : ""}>${collected ? "✓ Recolhido" : `Recolher ${productName}`}</button></div><p class="daily-note">Cada grupo produz uma vez por data. Se ficar alguns dias fora, nada se perde; o próximo cuidado começa quando você voltar.</p>`;
   } else {
     const tourAction =
       state.tour.current > 0 && state.tour.current < TOUR_STOPS.length
@@ -366,6 +391,8 @@ document.addEventListener("click", (event) => {
                 ? buyDecoration(state, el.dataset.decoration!)
               : action === "toggle"
                   ? toggleDecoration(state, el.dataset.decoration!)
+                  : action === "collect-animal"
+                    ? collectAnimalProduct(state, el.dataset.animal as Animal)
                   : action === "postfair"
                     ? completePostfair(state, npc)
                   : null;
@@ -410,8 +437,8 @@ document.addEventListener("click", (event) => {
     open("shop");
     notify(
       earned
-        ? `Colheita vendida! +${earned} moedas.`
-        : "Sua mochila ainda não tem colheitas.",
+        ? `Colheitas e produtos vendidos! +${earned} moedas.`
+        : "Sua mochila ainda não tem colheitas ou produtos.",
     );
   }
   if (el.id === "upgrade" && upgrade(state)) {

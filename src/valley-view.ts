@@ -231,6 +231,10 @@ export function updateDailyHud(farm: FarmState, now = Date.now()) {
             label: `Ajudar ${postfair.npc} com a atividade do dia`,
           },
           {
+            done: s.daily.animalCollected.length > 0,
+            label: "Cuidar de um animal e recolher sua produção",
+          },
+          {
             done: s.daily.delivered,
             label: `Ajudar ${dailyRequest(farm).npc} com a encomenda`,
           },

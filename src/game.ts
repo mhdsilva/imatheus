@@ -107,6 +107,8 @@ export class FarmScene extends Phaser.Scene {
       "board",
       "cow",
       "chicken",
+      "milk",
+      "egg",
       "flower",
       "sunflower",
       "hay",

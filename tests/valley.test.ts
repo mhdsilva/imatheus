@@ -203,6 +203,22 @@ test("post-fair activity rewards one short visit and resets on a new date", () =
   assert.equal(farm.valley.daily.postfairDone, false);
 });
 
+test("animal production requires daily care and is collected only once", () => {
+  const farm = farmAt();
+  assert.equal(valley.collectAnimalProduct(farm, "cow", morning).ok, false);
+  assert.equal(valley.careFor(farm, "cow", morning).ok, true);
+  assert.equal(valley.collectAnimalProduct(farm, "cow", morning).ok, true);
+  assert.deepEqual(farm.animalProducts, { milk: 1, egg: 0 });
+  assert.equal(valley.collectAnimalProduct(farm, "cow", morning).ok, false);
+  valley.beginDay(farm, morning + 86_400_000);
+  assert.equal(valley.careFor(farm, "cow", morning + 86_400_000).ok, true);
+  assert.equal(
+    valley.collectAnimalProduct(farm, "cow", morning + 86_400_000).ok,
+    true,
+  );
+  assert.equal(farm.animalProducts.milk, 2);
+});
+
 test("decorations use earned stamps and can be toggled without being purchased twice", () => {
   const farm = farmAt();
   assert.equal(valley.buyDecoration(farm, "flowerbed").ok, false);

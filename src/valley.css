@@ -314,6 +314,44 @@
   width: 50px;
   image-rendering: pixelated;
 }
+.animal-product-card {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-top: 22px;
+  padding: 16px;
+  border: 1px solid #dedfca;
+  border-radius: 12px;
+  background: #f7f4e4;
+}
+.animal-product-card img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+.animal-product-card > div {
+  flex: 1;
+}
+.animal-product-card span {
+  font-size: 9px;
+  letter-spacing: 1.2px;
+  color: #8b7956;
+}
+.animal-product-card h3 {
+  margin: 5px 0;
+  color: #4c6247;
+}
+.animal-product-card p {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.6;
+  color: #7b826c;
+}
+.animal-product-row strong {
+  color: #7b826c;
+  font-size: 11px;
+}
 @media (max-width: 600px) {
   .stamp-wallet {
     padding: 7px;
@@ -336,5 +374,12 @@
   }
   .friendships > div {
     gap: 8px;
+  }
+  .animal-product-card {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .animal-product-card button {
+    width: 100%;
   }
 }

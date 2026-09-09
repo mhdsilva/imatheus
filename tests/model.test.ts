@@ -1,6 +1,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
+  ANIMAL_PRODUCTS,
+  animalProductKeys,
   buySeed,
   findPath,
   newFarm,
@@ -47,6 +49,18 @@ test("economy cannot buy without funds, duplicate sales, or purchase an expansio
   assert.equal(sellAll(state), 38);
   assert.equal(sellAll(state), 0);
 });
+test("animal products join the market economy and cannot be sold twice", () => {
+  const state = newFarm();
+  state.animalProducts.milk = 1;
+  state.animalProducts.egg = 2;
+  assert.deepEqual(animalProductKeys, ["milk", "egg"]);
+  assert.equal(
+    sellAll(state),
+    ANIMAL_PRODUCTS.milk.price + ANIMAL_PRODUCTS.egg.price * 2,
+  );
+  assert.deepEqual(state.animalProducts, { milk: 0, egg: 0 });
+  assert.equal(sellAll(state), 0);
+});
 test("locked plots do not consume seeds until the upgrade is purchased", () => {
   const state = newFarm();
   plotAction(state, 18, "carrot");
@@ -72,6 +86,15 @@ test("save restoration preserves progress and recovers safely from invalid data"
     JSON.stringify({ ...state, version: 999 }),
   ])
     assert.equal(restore(value).coins, 35);
+});
+test("older saves gain an empty animal inventory without losing progress", () => {
+  const state = newFarm();
+  state.coins = 91;
+  const legacy = structuredClone(state) as { animalProducts?: unknown };
+  delete legacy.animalProducts;
+  const restored = restore(JSON.stringify(legacy));
+  assert.equal(restored.coins, 91);
+  assert.deepEqual(restored.animalProducts, { milk: 0, egg: 0 });
 });
 test("v2 save without a tour keeps farm and valley progress", () => {
   const state = newFarm();
