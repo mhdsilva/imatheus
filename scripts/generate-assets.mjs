@@ -1169,6 +1169,94 @@ rect(2, 20, 12, 3, "wood");
 rect(3, 10, 1, 10, "woodL");
 rect(12, 10, 1, 10, "woodL");
 save("lantern");
+canvas(1200, 630);
+rect(0, 0, 1200, 630, "#91b96b");
+rect(0, 0, 1200, 240, "#a9cdb7");
+poly(
+  [
+    [0, 240],
+    [180, 170],
+    [350, 235],
+    [520, 155],
+    [720, 225],
+    [930, 145],
+    [1200, 220],
+    [1200, 300],
+    [0, 300],
+  ],
+  "#78a66b",
+);
+for (const x of [35, 135, 245, 840, 1005, 1115]) {
+  ellipse(x, 180, 43, 34, "dark");
+  ellipse(x - 25, 158, 31, 31, "green");
+  ellipse(x + 22, 154, 34, 35, "leaf");
+  rect(x - 6, 194, 12, 42, "wood");
+}
+rect(1025, 0, 115, 630, "blue");
+rect(1006, 0, 19, 630, "sky");
+rect(1140, 0, 16, 630, "sky");
+for (let y = 38; y < 620; y += 48) rect(1040, y, 54, 3, "sky");
+rect(0, 433, 1025, 44, "#ddbd82");
+rect(468, 264, 45, 213, "#ddbd82");
+rect(0, 430, 1025, 5, "#c9b17b");
+rect(0, 475, 1025, 5, "#c9b17b");
+for (let row = 0; row < 3; row++)
+  for (let col = 0; col < 7; col++) {
+    const x = 390 + col * 38,
+      y = 300 + row * 32;
+    rect(x, y, 31, 23, "soil");
+    rect(x + 4, y + 8, 23, 2, "woodL");
+    ellipse(x + 15, y + 4, 4, 6, row === 1 ? "yellow" : "leaf");
+  }
+rect(82, 278, 185, 139, "cream");
+poly(
+  [
+    [54, 282],
+    [176, 196],
+    [300, 282],
+  ],
+  "roof",
+);
+rect(147, 339, 48, 78, "wood");
+rect(155, 347, 31, 28, "blue");
+rect(690, 261, 230, 160, "red");
+poly(
+  [
+    [660, 266],
+    [804, 171],
+    [953, 266],
+  ],
+  "wood",
+);
+rect(775, 316, 60, 105, "cream");
+rect(790, 329, 31, 92, "red");
+rect(714, 298, 35, 39, "blue");
+rect(856, 298, 35, 39, "blue");
+rect(520, 377, 18, 46, "wood");
+ellipse(529, 351, 48, 31, "dark");
+ellipse(501, 334, 35, 32, "green");
+ellipse(549, 331, 34, 35, "leaf");
+rect(468, 388, 45, 8, "woodL");
+rect(580, 395, 17, 39, "wood");
+rect(564, 398, 50, 9, "yellow");
+rect(590, 407, 7, 27, "wood");
+ellipse(591, 386, 14, 12, "cream");
+rect(585, 398, 13, 29, "blue");
+rect(580, 424, 8, 8, "ink");
+rect(594, 424, 8, 8, "ink");
+for (const x of [330, 356, 625, 650, 965]) {
+  rect(x, 418, 4, 24, "green");
+  ellipse(x + 2, 414, 10, 7, "yellow");
+}
+rect(18, 18, 1164, 9, "#f6dfad");
+rect(18, 603, 1164, 9, "#f6dfad");
+rect(18, 18, 9, 594, "#f6dfad");
+rect(1173, 18, 9, 594, "#f6dfad");
+rect(25, 25, 1150, 9, "#f6dfad");
+rect(25, 596, 1150, 9, "#f6dfad");
+rect(25, 25, 9, 580, "#f6dfad");
+rect(1166, 25, 9, 580, "#f6dfad");
+save("social-card");
 writeFileSync(
   new URL("manifest.json", out),
   JSON.stringify(metadata, null, 2) + "\n",

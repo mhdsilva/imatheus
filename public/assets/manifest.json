@@ -429,5 +429,9 @@
   "lantern": {
     "width": 16,
     "height": 26
+  },
+  "social-card": {
+    "width": 1200,
+    "height": 630
   }
 }

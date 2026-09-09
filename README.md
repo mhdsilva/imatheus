@@ -55,7 +55,7 @@ Saves v1 e v2 migram preservando a fazenda; o inventário animal e as memórias 
 
 ## Organização
 
-- `scripts/generate-assets.mjs`: desenhos em pixels, codificador PNG e manifesto das imagens. Execute `npm run assets` para gerar os 74 arquivos em `public/assets`. O comando também roda antes do desenvolvimento e do build.
+- `scripts/generate-assets.mjs`: desenhos em pixels, codificador PNG e manifesto das imagens. Execute `npm run assets` para gerar os 75 arquivos em `public/assets`, incluindo o cartão social 1200 × 630. O comando também roda antes do desenvolvimento e do build.
 - `src/model.ts`: regras de cultivo, inventário, economia, aparência e acessórios, validação de salvamentos e busca de caminhos.
 - `src/valley.ts` e `src/valley-content.ts`: calendário, capítulos, amizade, encomendas e recompensas.
 - `src/valley-view.ts`, `src/valley.css` e `src/valley-world.ts`: diário, coleção, decoração e reconstrução do cenário.
