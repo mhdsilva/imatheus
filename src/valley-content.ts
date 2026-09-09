@@ -2,6 +2,14 @@ import type { AnimalProduct, Crop, FarmState } from "./model";
 
 export const RESIDENTS = ["Lia", "Bento", "Rosa"] as const;
 export type Resident = (typeof RESIDENTS)[number];
+export const RESIDENT_WORK_ASSETS = {
+  Lia: "can",
+  Bento: "wrench",
+  Rosa: "basket",
+} as const satisfies Record<Resident, string>;
+export function residentWorkAsset(npc: Resident) {
+  return RESIDENT_WORK_ASSETS[npc];
+}
 export type Site = "bench" | "well" | "mill" | "fair";
 export const POSTFAIR_EVENTS = [
   {

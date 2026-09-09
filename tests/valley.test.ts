@@ -7,6 +7,7 @@ import {
   FRIENDSHIP_SCENES,
   residentActivity,
   residentDialogue,
+  residentWorkAsset,
 } from "../src/valley-content";
 
 const morning = new Date("2026-09-07T15:00:00Z").getTime();
@@ -179,6 +180,11 @@ test("resident routines and dialogue reflect their work and story progress", () 
   assert.equal(residentActivity("Lia", 0), "rega a horta");
   assert.equal(residentActivity("Bento", 1), "ajusta o trator");
   assert.equal(residentActivity("Rosa", 2), "organiza a banca");
+  assert.deepEqual((["Lia", "Bento", "Rosa"] as const).map(residentWorkAsset), [
+    "can",
+    "wrench",
+    "basket",
+  ]);
   const farm = farmAt();
   const first = residentDialogue(farm, "Lia", morning);
   valley.talkTo(farm, "Lia", morning);

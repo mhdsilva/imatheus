@@ -120,7 +120,7 @@ Prioridade: depois de consolidar a apresentação profissional.
 - Variar falas pelo capítulo e pelo que já aconteceu; evitar anunciar acontecimentos que ainda não foram liberados.
 - Pausar a atividade durante uma conversa e retomá-la ao terminar, com tratamento de caminhos bloqueados.
 
-Status em 9 de setembro de 2026: as rotinas mostram atividades textuais no mundo, cada morador alterna diálogo contextual após a primeira conversa diária e, depois da feira, cada amizade com 3 pontos desbloqueia uma memória opcional registrada no diário. Quadros de animação de trabalho e uma cadeia maior de cenas continuam como evolução futura.
+Status em 9 de setembro de 2026: as rotinas mostram atividades textuais no mundo, cada morador alterna diálogo contextual após a primeira conversa diária e, depois da feira, cada amizade com 3 pontos desbloqueia uma memória opcional registrada no diário. Lia, Bento e Rosa agora carregam regador, chave inglesa e cesta durante as pausas, com balanço sutil gerado no jogo; uma cadeia maior de cenas continua como evolução futura.
 
 ### Critérios de conclusão
 

@@ -1,7 +1,11 @@
 import Phaser from "phaser";
 import { assetPath } from "./assets";
 import { ValleyWorld, VALLEY_ASSETS } from "./valley-world";
-import { residentActivity, type Resident } from "./valley-content";
+import {
+  residentActivity,
+  residentWorkAsset,
+  type Resident,
+} from "./valley-content";
 import {
   accessoryKeys,
   CROPS,
@@ -127,6 +131,7 @@ export class FarmScene extends Phaser.Scene {
       "hay",
       "shadow",
       "can",
+      "wrench",
       "basket",
       ...Object.keys(CROPS).flatMap((k) => [`${k}-0`, `${k}-1`, `${k}-2`]),
     ])
@@ -557,13 +562,14 @@ export class FarmScene extends Phaser.Scene {
       radius: 15,
       action: () => this.hooks.open("dialogue", name),
     };
-    const work =
-      key === "farmer" || key === "merchant"
-        ? this.add
-            .image(x + 8, y - 8, key === "farmer" ? "can" : "basket")
-            .setScale(0.5)
-            .setDepth(y + 1)
-        : undefined;
+    const work = this.add
+      .image(
+        x + (name === "Bento" ? -8 : 8),
+        y - 8,
+        residentWorkAsset(name as Resident),
+      )
+      .setScale(0.5)
+      .setDepth(y + 1);
     this.targets.push(target);
     this.actors.push({
       sprite,
@@ -954,11 +960,22 @@ export class FarmScene extends Phaser.Scene {
         .setPosition(a.sprite.x, a.sprite.y - 33)
         .setDepth(a.sprite.y + 40);
       if (a.work) {
+        const phase = time / 250 + a.goal,
+          sway = Math.sin(phase) * (a.name === "Rosa" ? 1.5 : 0);
         a.work
           .setVisible(!a.path.length)
-          .setPosition(a.sprite.x + 8, a.sprite.y - 9 + Math.sin(time / 250))
+          .setPosition(
+            a.sprite.x + (a.name === "Bento" ? -8 : 8) + sway,
+            a.sprite.y - 9 + Math.sin(phase),
+          )
           .setDepth(a.sprite.y + 1)
-          .setAngle(a.name === "Lia" ? -15 + Math.sin(time / 300) * 10 : 0);
+          .setAngle(
+            a.name === "Lia"
+              ? -15 + Math.sin(time / 300) * 10
+              : a.name === "Bento"
+                ? Math.sin(time / 180) * 18
+                : Math.sin(time / 300) * 5,
+          );
       }
       if (a.target) {
         a.target.x = a.sprite.x;

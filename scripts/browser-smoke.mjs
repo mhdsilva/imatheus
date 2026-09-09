@@ -299,6 +299,16 @@ try {
   );
   console.log("Animal product daily order and delivery verified.");
   await page.keyboard.press("Escape");
+  assert.deepEqual(
+    await page.evaluate(() =>
+      Object.fromEntries(
+        window.__farm.scene.actors
+          .filter((actor) => ["Lia", "Bento", "Rosa"].includes(actor.name))
+          .map((actor) => [actor.name, actor.work?.texture.key]),
+      ),
+    ),
+    { Lia: "can", Bento: "wrench", Rosa: "basket" },
+  );
   const npcBefore = await page.evaluate(() =>
     window.__farm.scene.actors.map((a) => ({ x: a.sprite.x, y: a.sprite.y })),
   );
